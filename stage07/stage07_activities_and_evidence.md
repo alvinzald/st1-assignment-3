@@ -14,34 +14,43 @@ For each requirement, propose one positive test, one negative test and the key a
 
 | Requirement | Positive test | Negative test | Key assertion |
 |---|---|---|---|
-| FR-01 Register patient | [response] | [response] | [response] |
-| FR-05 Prevent practitioner conflict | [response] | [response] | [response] |
-| FR-06 Cancel appointment | [response] | [response] | [response] |
-| FR-07 Retain cancelled history | [response] | [response] | [response] |
+| FR-01 Register patient | [Register a patient with valid ID 'P1' and name 'Alex'. Verify that the returned object contains matching trimmed attributes.] | [Attempt to register a patient with an existing ID 'P1' or a blank ID "".] | [assert patient.patient_id == 'P1' and with pytest.raises(ValueError): patient_service.register_patient('', 'Alex')] |
+| FR-05 Prevent practitioner conflict | [Book two appointments for different practitioners ('DR1' and 'DR2') at the exact same date and time '2026-10-01 09:00'.] | [Attempt to book a second appointment for the same practitioner ('DR1') at the exact same date and time '2026-10-01 09:00'.] | [with pytest.raises(ValueError): appt_service.book_appointment('A2', 'P2', 'DR1', dt).] |
+| FR-06 Cancel appointment | [Call cancel_appointment('A1') on a SCHEDULED appointment.] | [Call cancel_appointment('A1') on an appointment that has already been CANCELLED.] | [assert cancelled_appt.status == AppointmentStatus.CANCELLED and with pytest.raises(ValueError): appt_service.cancel_appointment('A1').] |
+| FR-07 Retain cancelled history | [Cancel appointment 'A1', then request the data store using find_appointment('A1').] | [Verifying cancellation does not delete the appointment from the store or remove participant links.] | [assert store.find_appointment('A1') is appt and assert appt.status == AppointmentStatus.CANCELLED.] |
 
 ### Activity 2 Strong or weak assertion
 
 For each, select Strong for stated behaviour or Weak/unclear and explain why. State the behaviour and limits.
 
 `assert True`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Weak/unclear]  Why: [It always evaluates to True regardless of application behavior or underlying state, failing to detect any product defect.]
 
 `assert appointment is not None`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Weak/unclear]  Why: [It proves that an object reference exists, but it does not verify its specific properties, participant identity, or domain status (SCHEDULED/CANCELLED).]
 
 `assert appointment.status == AppointmentStatus.CANCELLED`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Strong for stated behaviour]  Why: [It verifies the precise domain state transition required under FR-06 / AC-05.1 after any cancellation operation.]
 
 `assert len(results) > 0`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Weak/unclear]  Why: [It confirms that a collection is nonempty, but it does not verify whether the correct appointment objects, participant IDs, or expected statuses are present in it.]
 
 `assert data_store.find_appointment('A1') is appointment`
-Judgement: [Strong for stated behaviour / Weak/unclear]  Why: [response]
+Judgement: [Strong for stated behaviour]  Why: [It checks the exact Python object identity (is) in the memory store, proving that the original appointment instance is retained for history under FR-07 rather than being recreated or replaced.]
+
+### Activity 3 Boundary thinking
 
 ### Activity 3 Boundary thinking
 
 Design boundary or edge cases for blank identifiers, whitespace-only names, same-time practitioner bookings, cancelled appointments and invalid status transitions.
-For each input/state, expected result and supporting contract: [response]
+
+| Input / Boundary state | Expected result | Supporting contract |
+|---|---|---|
+| **Blank identifiers:** Passing `""` or `"   "` as a `patient_id` or `practitioner_id`[cite: 28]. | `ValueError` raised[cite: 28]. | `domain.py` `required_text` helper requires non-blank string input after trimming whitespace[cite: 28]. |
+| **Whitespace-only names:** Passing `"   "` as a patient or practitioner `name`[cite: 28]. | `ValueError` raised[cite: 28]. | `domain.py` entity constructors reject empty or whitespace-only text[cite: 28]. |
+| **Same-time practitioner bookings:** Booking same practitioner at exact same time `2026-10-01 09:00` vs. different practitioner at `2026-10-01 09:00`[cite: 30, 34]. | Same practitioner raises `ValueError`; different practitioner succeeds[cite: 30, 34]. | `SmartCareDataStore.has_practitioner_conflict` checks practitioner ID and exact datetime matching[cite: 30]. |
+| **Cancelled appointments:** Calling `cancel()` on an appointment already in `CANCELLED` status[cite: 28, 34]. | `ValueError` raised; status remains `CANCELLED`[cite: 28, 34]. | `Appointment.cancel()` method protects its domain transition guard[cite: 28]. |
+| **Invalid status transitions:** Attempting to transition from `COMPLETED` or `CANCELLED` back to `SCHEDULED`[cite: 28]. | `ValueError` raised[cite: 28]. | `Appointment.cancel()` protects status properties and restricts illegal transitions[cite: 28]. |
 
 ### Activity 4 Critique GitHub Copilot tests
 
@@ -49,16 +58,16 @@ GitHub Copilot generates five tests, all of which pass. Two only assert that obj
 
 | Candidate | What is wrong | Rewritten test intention |
 |---|---|---|
-| 1 | [response] | [response] |
-| 2 | [response] | [response] |
-| 3 | [response] | [response] |
-| 4 | [response] | [response] |
-| 5 | [response] | [response] |
+| 1 | [It only asserts patient is not None and fails to check whether fields were trimmed or correctly stored.] | [Verify that PatientService.register_patient(' P1 ', ' Alex ') stores trimmed ID 'P1' and name 'Alex'.] |
+| 2 | [It only asserts appointment is not None and fails to verify participant identity or initial status.] | [Verify book_appointment and assigns AppointmentStatus.SCHEDULED and links the exact registered Patient and Practitioner objects.] |
+| 3 | [It asserts True, which passes unconditionally and provides zero test verification.] | [Verify register_patient raises ValueError when attempting to register a duplicate patient ID.] |
+| 4 | [It assumes that SMS notifications exist, which invents features outside the current SmartCare baseline requirements.] | [Verify booking a same practitioner at the same time slot raises ValueError while preserving store state.] |
+| 5 | [It assumes SMS notification logic, which relies on out-of-scope external integrations] | [Verify cancel_appointment, updates status to CANCELLED while leaving the appointment retrievable via find_appointment.] |
 
 ### Tutorial exit question
 
 Why can 100% code coverage coexist with poor software verification?
-[response]
+[Code coverage measures the lines of code which were executed during test execution, but it does not measure the quality or validity of the test assertions. A test suite can achieve 100% line coverage by running the code with weak assertions while it fails to check edge cases, error conditions, boundary validation, or domain state preservation.]
 
 ## B Requirement to Test Traceability Matrix
 
