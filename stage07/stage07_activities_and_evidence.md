@@ -38,7 +38,6 @@ Judgement: [Weak/unclear]  Why: [It confirms that a collection is nonempty, but 
 `assert data_store.find_appointment('A1') is appointment`
 Judgement: [Strong for stated behaviour]  Why: [It checks the exact Python object identity (is) in the memory store, proving that the original appointment instance is retained for history under FR-07 rather than being recreated or replaced.]
 
-### Activity 3 Boundary thinking
 
 ### Activity 3 Boundary thinking
 
@@ -75,7 +74,18 @@ Assign TEST IDs before implementation or generation. Use canonical AC IDs with t
 
 | Requirement | Acceptance criterion | Test ID | Test type | Test name / location | Expected behaviour | Result / observed status | Supplied or student-authored |
 |---|---|---|---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| **FR-01** | **AC-01.1** | `TEST-FR01-01` | Positive | `test_registration_and_booking` in `test_starter.py` | Valid patient ID and name stored in data store[cite: 28, 30, 42]. | PASSED | Supplied[cite: 34] |
+| **FR-01** | **AC-01.2** | `TEST-FR01-02` | Negative | `test_duplicate_patient_preserves_original` in `test_starter.py` | Duplicate patient ID registration rejected with `ValueError`[cite: 30, 34]. | PASSED | Supplied[cite: 34] |
+| **FR-01** | Revision 2 validation contract | `TEST-FR01-03` | Negative | `test_blank_patient_id_rejected` in `test_domain.py` | Blank/whitespace patient ID raises `ValueError`[cite: 28, 34, 42]. | PASSED | Student-authored[cite: 42] |
+| **FR-02** | **AC-02.1** | `TEST-FR02-01` | Positive | `test_find_patient_success` in `test_services.py` | Known patient lookup returns stored `Patient` object[cite: 30, 31, 42]. | PASSED | Student-authored[cite: 42] |
+| **FR-02** | **AC-02.2** | `TEST-FR02-02` | Negative | `test_find_patient_absent_raises_lookup_error` in `test_services.py` | Valid unknown patient ID raises `LookupError`[cite: 31, 42]. | PASSED | Student-authored[cite: 42] |
+| **FR-04** | **AC-03.1** | `TEST-FR04-01` | Positive | `test_registration_and_booking` in `test_starter.py` | Valid participants create stored `SCHEDULED` appointment[cite: 28, 30, 34]. | PASSED | Supplied[cite: 34] |
+| **FR-04** | **AC-03.2** | `TEST-FR04-02` | Negative | `test_unregistered_participants_rejected` in `test_starter.py` | Booking with unregistered participant raises `LookupError`/`ValueError`[cite: 31, 34]. | PASSED | Supplied[cite: 34] |
+| **FR-05** | **AC-04.1** | `TEST-FR05-01` | Negative | `test_conflict_rule_and_different_practitioner` in `test_starter.py` | Same practitioner at exact same time raises `ValueError`[cite: 30, 34]. | PASSED | Supplied[cite: 34] |
+| **FR-05** | **AC-04.2** | `TEST-FR05-02` | Positive | `test_conflict_rule_and_different_practitioner` in `test_starter.py` | Different practitioner at same time is permitted[cite: 30, 34]. | PASSED | Supplied[cite: 34] |
+| **FR-06** | **AC-05.1** | `TEST-FR06-01` | Positive | `test_domain_cancellation_and_guard` in `test_starter.py` | Cancelling scheduled appointment changes status to `CANCELLED`[cite: 28, 34]. | PASSED | Supplied[cite: 34] |
+| **FR-06** | **AC-05.3** | `TEST-FR06-02` | Negative | `test_repeat_cancellation_rejected` in `test_domain.py` | Cancelling an already cancelled appointment raises `ValueError`[cite: 28, 42]. | PASSED | Student-authored[cite: 42] |
+| **FR-07** | **AC-05.2** | `TEST-FR07-01` | Positive | `test_cancelled_appointment_retained_in_history` in `test_services.py` | Cancelled appointment remains retrievable in data store history[cite: 28, 30, 42]. | PASSED | Student-authored[cite: 42] |
 
 ## C Test Design
 
@@ -83,7 +93,11 @@ Use descriptive test names such as test_cancel_changes_status() or test_blank_pa
 
 | Test ID | Requirement | Acceptance criterion | Positive / Negative / Boundary | Test intention | Observable result expected | Added evidence beyond supplied tests |
 |---|---|---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| `TEST-FR01-03` | FR-01 | Revision 2 validation contract | Negative | Verify constructor validation for blank patient ID[cite: 28, 42]. | `ValueError` raised when initializing `Patient("", "Alex")`[cite: 28, 34]. | Checks core domain entity guard independently of service orchestration[cite: 28, 42]. |
+| `TEST-FR02-01` | FR-02 | AC-02.1 | Positive | Verify patient lookup workflow via service layer[cite: 31, 42]. | `find_patient('P1')` returns the registered `Patient` object[cite: 31]. | Verifies Stage 6 service lookup completion[cite: 31, 42]. |
+| `TEST-FR02-02` | FR-02 | AC-02.2 | Negative | Verify service lookup error handling for absent patient[cite: 31, 42]. | `find_patient('P999')` raises `LookupError`[cite: 31]. | Confirms service lookup raises `LookupError` rather than returning `None`[cite: 31]. |
+| `TEST-FR06-02` | FR-06 | AC-05.3 | Negative | Verify domain cancellation guard against repeated execution[cite: 28, 42]. | Second call to `cancel()` raises `ValueError`[cite: 28]. | Proves domain entity protects invalid status transition invariants[cite: 28, 42]. |
+| `TEST-FR07-01` | FR-07 | AC-05.2 | Positive | Verify cancelled appointment history retention in store[cite: 28, 30, 42]. | `find_appointment('A1')` returns object with status `CANCELLED`[cite: 28, 30]. | Proves cancellation does not purge records from `SmartCareDataStore`[cite: 28, 30, 42]. |
 
 ## D Arrange Act Assert Record
 
@@ -91,7 +105,11 @@ Arrange test data; act on one meaningful behaviour; assert the required observab
 
 | Test ID | Arrange | Act | Assert | Why meaningful / why assertion proves criterion |
 |---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] |
+| `TEST-FR01-03` | None required (direct constructor invocation)[cite: 42]. | Call `Patient("", "Alex Example")`[cite: 28, 34]. | `with pytest.raises(ValueError):`[cite: 34, 42] | Directly verifies that invalid entity creation is blocked at the domain boundary[cite: 28, 42]. |
+| `TEST-FR02-01` | Instantiate store and `PatientService`; register patient `'P1'`[cite: 30, 31, 42]. | Call `patient_service.find_patient('P1')`[cite: 31]. | `assert result.patient_id == 'P1'`[cite: 28, 42] | Verifies that registered patient records are retrievable by ID via the service lookup[cite: 31, 42]. |
+| `TEST-FR02-02` | Instantiate store and `PatientService`[cite: 30, 31, 42]. | Call `patient_service.find_patient('UNKNOWN')`[cite: 31]. | `with pytest.raises(LookupError):`[cite: 31, 42] | Proves the service contract raises `LookupError` rather than returning `None` for absent IDs[cite: 31, 42]. |
+| `TEST-FR06-02` | Create `SCHEDULED` appointment `'A1'`; invoke `appt.cancel()`[cite: 28, 42]. | Invoke `appt.cancel()` a second time[cite: 28, 42]. | `with pytest.raises(ValueError):`[cite: 28, 42] | Proves state transition guards prevent illegal duplicate cancellation[cite: 28, 42]. |
+| `TEST-FR07-01` | Register `P1` and `DR1`; book `A1`; invoke `cancel_appointment('A1')`[cite: 28, 30, 42]. | Call `appt_service.find_appointment('A1')`[cite: 30, 31]. | `assert appt.status == AppointmentStatus.CANCELLED`[cite: 28, 42] | Proves historical records remain intact and retrievable after status transition[cite: 28, 30, 42]. |
 
 ## E Domain Test Evidence
 
@@ -99,7 +117,11 @@ Cover Patient/Practitioner construction and validation; Appointment construction
 
 | Test ID | Behaviour | Test file/function | Result |
 |---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] |
+| `TEST-FR01-03` | Blank patient ID raises `ValueError`[cite: 28, 34]. | `tests/test_domain.py::test_blank_patient_id_rejected`[cite: 34, 42] | PASSED[cite: 42] |
+| `TEST-FR03-01` | Blank practitioner specialty raises `ValueError`[cite: 28, 34]. | `tests/test_domain.py::test_blank_practitioner_specialty_rejected`[cite: 34, 42] | PASSED[cite: 42] |
+| `TEST-FR04-03` | New appointment defaults to `SCHEDULED` status[cite: 28, 34]. | `tests/test_domain.py::test_new_appointment_is_scheduled`[cite: 34, 42] | PASSED[cite: 42] |
+| `TEST-FR06-01` | Domain cancellation changes status to `CANCELLED`[cite: 28, 34]. | `tests/test_domain.py::test_domain_cancellation`[cite: 34, 42] | PASSED[cite: 42] |
+| `TEST-FR06-02` | Repeat domain cancellation raises `ValueError`[cite: 28, 42]. | `tests/test_domain.py::test_repeat_cancellation_rejected`[cite: 42] | PASSED[cite: 42] |
 
 ## F Service Test Evidence
 
