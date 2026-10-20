@@ -55,32 +55,32 @@ Evidence is written in the Stage 6 file.
 
 | Original example | Strong or Weak | Reason |
 |---|---|---|
-| changes | [select] | [response] |
-| final version | [select] | [response] |
-| Add patient search by ID | [select] | [response] |
-| fix stuff | [select] | [response] |
-| Prevent cancellation of completed appointments | [select] | [response] |
+| changes | Weak | it does not explain or describe what was changed |
+| final version | Weak | [does not describe] |
+| Add patient search by ID | Strong  | Clearly describes the feature added |
+| fix stuff | Weak | does not explain what was fixed |
+| Prevent cancellation of completed appointments | Strong | Clearly explains the behaviour being changed |
 
 ## C Over scoped PR review
 
 A cancellation PR also renames unrelated patient fields, restructures unrelated code and adds a new dependency.
 
-- Scope concerns: [response]
-- Responsibility and architecture concerns: [response]
-- Testing and review concerns: [response]
-- Changes to remove or separate, with reasons: [response]
+- Scope concerns: A cancellation PR should only change cancellation. The renamed patient fields, restructured code and new dependency are unrelated, so the PR is bigger and harder to review.
+- Responsibility and architecture concerns: Patient owns its fields, and cancellation belongs to Appointment.cancel() and the service. Renaming patient fields could break other code that uses them. A new dependency changes what the whole project needs to run.
+- Testing and review concerns: Patient owns its fields, and cancellation belongs to Appointment.cancel() and the service. Renaming patient fields could break other code that uses them. A new dependency changes what the whole project needs to run.
+- Changes to remove or separate, with reasons: Remove the unrelated patient field changes, code restructuring and new dependency. If needed, these should be handled in separate issues and PRs.
 
 ## D Challenge a weak Copilot review
 
 GitHub Copilot says: "Looks good; tests pass."
 
-- Missing evidence: [response]
-- Follow-up review question 1: [response]
-- Follow-up review question 2: [response]
-- Follow-up review question 3: [response]
-- Follow-up review question 4: [response]
-- Follow-up review question 5: [response]
-- Additional questions if useful: [response]
+- Missing evidence: Copilot has not explained which requirements were checked, which tests passed, or whether the code handles errors correctly.
+- Follow-up review question 1: Does patient lookup return the original stored patient object?
+- Follow-up review question 2: Does practitioner lookup return the original stored practitioner object?
+- Follow-up review question 3: Does cancellation raise an error when the appointment does not exist?
+- Follow-up review question 4: Does cancellation prevent completed appointments from being cancelled?
+- Follow-up review question 5: Does cancellation keep the appointment in the data store for history?
+- Additional questions if useful: NA
 
 ## E Team workflow agreement
 
@@ -107,8 +107,27 @@ Create at least two focused issues. Add a linked practitioner-lookup issue or an
 
 Repeat this block per PR. Record actual events, not planned approvals.
 
-- PR link and title: [response]
-- Linked issue and requirement: [response]
+- PR link and title: [https://github.com/alvinzald/st1-assignment-3/pull/3], Implement patient and practitioner lookup with tests
+- Linked issue and requirement: Issue #1, [https://github.com/alvinzald/st1-assignment-3/issues/1#issue-5908488276], FR-02/FR-03
+- Feature branch: feature/find-looups
+- Changed behaviour: PatientService.find_patient and PractitionerService.find_practitioner now return the actual stored object, raise LookupError for a valid ID that isn't registered, and raise ValueError for a blank or invalid ID (validation comes from the store).
+- Meaningful commits: [901ccc6b6b29fc6a586d4bede06012c1934c2f15]
+- Test command, directory and observed result: [python -m pytest, 10 tests passed]
+- Another-member reviewer: [Pending - Alvin Zaldivar]
+- Human observations recorded before Copilot: [link and time]
+- Requirement, responsibilities, test assertions and unrelated-scope checks: [response]
+- Key feedback: [response]
+- Author response/change and verification: [response]
+- Reviewer recheck and approval: [link]
+- Merge outcome and SHA: [response]
+- Significant Copilot assistance: [summary or none]
+- Linked issue closure: [response]
+- Each member updated main: [member and confirmation]
+- Integrated verification after merge: [command, directory, result and code SHA]
+
+- Issue 2 
+PR link and title: [response]
+- Linked issue and requirement: Issue #1, 
 - Feature branch: [response]
 - Changed behaviour: [response]
 - Meaningful commits: [links]
@@ -124,7 +143,6 @@ Repeat this block per PR. Record actual events, not planned approvals.
 - Linked issue closure: [response]
 - Each member updated main: [member and confirmation]
 - Integrated verification after merge: [command, directory, result and code SHA]
-
 ## H Copilot collaboration record
 
 Record meaningful required use, not every trivial completion. Repeat per significant interaction.
