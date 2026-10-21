@@ -146,8 +146,17 @@ PR link and title: [response]
 ## H Copilot collaboration record
 
 Record meaningful required use, not every trivial completion. Repeat per significant interaction.
-
+## PR 1 - Patient and Practitioner Lookup
 - Member and task: [response]
+- Prompt/purpose and relevant issue/diff: [response]
+- Summary of output: [response]
+- Human check against actual code, requirements and tests: [response]
+- Decision — Accept / Modify / Reject: [select]
+- Reason: [response]
+- Verification/evidence: [link and result]
+
+### PR 2 — Appointment Cancellation
+Member and task: [response]
 - Prompt/purpose and relevant issue/diff: [response]
 - Summary of output: [response]
 - Human check against actual code, requirements and tests: [response]
@@ -157,6 +166,16 @@ Record meaningful required use, not every trivial completion. Repeat per signifi
 
 ## I Human versus Copilot review comparison
 
+## PR 1 - Patient and Practitioner Lookup
+- Human reviewer noticed before consulting Copilot: [response]
+- Copilot noticed: [response]
+- Overlap: [response]
+- What did the human reviewer notice that Copilot did not: [response]
+- What did Copilot identify that the human reviewer initially missed: [response]
+- Unsupported or incorrect Copilot suggestion: [response or none identified with explanation]
+- Human judgement accepted, modified or rejected, and why: [response]
+- Which evidence justified merge approval: [response]
+### PR 2 — Appointment Cancellation
 - Human reviewer noticed before consulting Copilot: [response]
 - Copilot noticed: [response]
 - Overlap: [response]
