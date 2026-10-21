@@ -161,21 +161,21 @@ Repeat this block per PR. Record actual events, not planned approvals.
 - Author response/change and verification:
   - No changes requested at this stage; no author response required. Final review pending.
 - Reviewer recheck and approval: [link]
-- Merge outcome and SHA: [response]
+- Merge outcome and SHA: [] 
 - Significant Copilot assistance: [summary or none]
-- Linked issue closure: [response]
-- Each member updated main: [member and confirmation]
+- Linked issue closure: [https://github.com/alvinzald/st1-assignment-3/issues/1]
+- Each member updated main: [Alvin - Confirmed, Kaneez - Confirmed, Noor - Confirmed]
 - Integrated verification after merge: [command, directory, result and code SHA]
 
 
 - Issue 2 
-PR link and title: [response]
-- Linked issue and requirement: Issue #1, 
-- Feature branch: [response]
-- Changed behaviour: [response]
-- Meaningful commits: [links]
-- Test command, directory and observed result: [response]
-- Another-member reviewer: [response]
+PR link and title: Implement appointment cancellation with tests, [https://github.com/alvinzald/st1-assignment-3/pull/6#issue-5957874050]
+- Linked issue and requirement: Issue #2, FR-06/FR-07 
+- Feature branch: [feature/cancel-appointment]
+- Changed behaviour: Cancels a SCHEDULED appointment (status CANCELLED, same object, kept in history); invalid transitions and blank IDs raise ValueError, unknown IDs raise LookupError.
+- Meaningful commits: [f6222d3b559ddc4f2e1a36ad34a0dc48d62c864d] (implement appointment cancellation with tests.)
+- Test command, directory and observed result: [python -m pytest, run in project/, all 13 tests passed]
+- Another-member reviewer: [Alvin Zaldivar]
 - Human observations recorded before Copilot: [link and time]
 - Requirement, responsibilities, test assertions and unrelated-scope checks: [response]
 - Key feedback: [response]
@@ -190,13 +190,13 @@ PR link and title: [response]
 
 Record meaningful required use, not every trivial completion. Repeat per significant interaction.
 ## PR 1 - Patient and Practitioner Lookup
-- Member and task: [response]
-- Prompt/purpose and relevant issue/diff: [response]
-- Summary of output: [response]
-- Human check against actual code, requirements and tests: [response]
-- Decision — Accept / Modify / Reject: [select]
-- Reason: [response]
-- Verification/evidence: [link and result]
+- Member and task: [Noor Anwari - run the required Copilot review comparison for PR 2 (cancel_appointment and its tests)]
+- Prompt/purpose and relevant issue/diff: [Handout Part H review prompt, with issue #1's criteria (FR-03, FR-02) and the PR 1 diff]
+- Summary of output: [Copilot identified possible issues with ID validation, whitespace handling and missing test cases.]
+- Human check against actual code, requirements and tests: [Checked services.py, data_store.py and domain.py. Found that required_text() already validates IDs and removes extra spaces. The lookup methods also do not create new records.]
+- Decision — Accept / Modify / Reject: [Reject]
+- Reason: [Copilot suggested changes to ID validation, but after checking the code, I found that required_text() already handles validation. The existing code meets the requirements, so I did not make any changes.]
+- Verification/evidence: [Code checked against the requirements, all tests]
 
 ### PR 2 — Appointment Cancellation
 Member and task: [response]
@@ -210,14 +210,14 @@ Member and task: [response]
 ## I Human versus Copilot review comparison
 
 ## PR 1 - Patient and Practitioner Lookup
-- Human reviewer noticed before consulting Copilot: [response]
-- Copilot noticed: [response]
-- Overlap: [response]
-- What did the human reviewer notice that Copilot did not: [response]
-- What did Copilot identify that the human reviewer initially missed: [response]
-- Unsupported or incorrect Copilot suggestion: [response or none identified with explanation]
-- Human judgement accepted, modified or rejected, and why: [response]
-- Which evidence justified merge approval: [response]
+- Human reviewer noticed before consulting Copilot: [ The lookup methods return the correct objects and raise LookupError for unknown IDs. The tests also cover valid and invalid IDs.]
+- Copilot noticed: [ Copilot identified possible issues with ID validation, whitespace handling and missing test cases.]
+- Overlap: [Both checked ID validation and whether the lookup methods work correctly.]
+- What did the human reviewer notice that Copilot did not: [The datastore already uses required_text() to validate IDs.]
+- What did Copilot identify that the human reviewer initially missed: [None]
+- Unsupported or incorrect Copilot suggestion: [Copilot said ID validation was missing, but it is already handled by required_text() in the datastore.]
+- Human judgement accepted, modified or rejected, and why: [We rejected the missing validation finding because the datastore already handles it. We accepted that additional tests could improve test coverage.]
+- Which evidence justified merge approval: [The lookup methods followed the requirements, the existing tests covered the main cases, and the datastore handled ID validation.]
 ### PR 2 — Appointment Cancellation
 - Human reviewer noticed before consulting Copilot: [response]
 - Copilot noticed: [response]
@@ -244,6 +244,7 @@ Repeat per member. Include only categories that describe actual work; write not 
 ## K Exit question
 
 Why is a high commit count not necessarily evidence of strong contribution?
+A high commit count does not always mean a strong contribution because some commits might be small changes. A member with fewer commits might have done more important or difficult tasks. So, we should look at the quality of work, completed tasks and teamwork instead of just counting commits.
 
 [response]
 
@@ -251,43 +252,43 @@ Why is a high commit count not necessarily evidence of strong contribution?
 
 1. What is version control?
 
-[response]
+[Version control is a system that tracks changes made to files and code over time.It allows team members to work together, see who made changes, and go back to previous versions if something goes wrong. Git is an example]
 
 2. Why is a feature branch useful?
 
-[response]
+[A feature branch is useful because it allows teams members to work on changes separately without affecting the main code.]
 
 3. What makes a commit a good engineering commit?
 
-[response]
+[A good commit has clear changes, a meaningful message, and does not break the existing code.]
 
 4. What is a pull request?
 
-[response]
+[A pull request is a request to review changes before merging them into the main branch.]
 
 5. What is the purpose of code review?
 
-[response]
+[Code review helps find mistakes, improve code quality, and make sure the code works correctly before merging.]
 
 6. What does a Git diff show?
 
-[response]
+[A git diff shows the changes made to the code, inclduing added, removed, or modified lines.]
 
 7. What is a Definition of Done?
 
-[response]
+[A definition os done is a list of conditions that must be met before a task is considered complete.]
 
 8. What is the appropriate role of GitHub Copilot in pull-request review?
 
-[response]
+[Github copilot helps review code by suggesting improvements and finding possible issues, but a human reviewer must still check the changes.]
 
 9. Why should individual contribution not be judged only by commit count?
 
-[response]
+[Because commits are small changes, while others onvolve more difficult tasks. Contribution should be judged by the quality of work, completed tasks and teamwork.]
 
 10. What is the Stage 6 engineering rule?
 
-[response]
+[The stage 6 engineering rule is to make small, clear and tested changes, review them properly, and keep evidence of the work]
 
 ## M Completion and handover
 
@@ -297,8 +298,8 @@ Why is a high commit count not necessarily evidence of strong contribution?
 - Working directory: [response]
 - Observed result: [response]
 - PR and another-member reviewer: [links]
-- Unresolved issue or none: [response]
-- Stage 7 handover status: [ready for tutor checkpoint / unresolved work]
+- Unresolved issue or none: [none]
+- Stage 7 handover status: [ready for tutor checkpoint ]
 - Final submitted SHA if later than tested SHA: [response and evidence-only difference]
 
 - [ ] Three Stage 6 service targets completed and checked.
