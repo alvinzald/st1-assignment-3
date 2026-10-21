@@ -22,21 +22,21 @@ Complete this one group record. Link actual issues, diffs, tests and reviews; av
   - `PractitionerService.find_practitioner` is also not written and follows the same pattern, so it is covered here as a supporting operation.
 - Requirement: FR-02 (AC-02.1, AC-02.2), FR-03 is practitioner registration.
 - Acceptance criteria:
-  - [ ] If the patient is registered, looking up their ID returns that same stored patient.
-  - [ ] A valid ID that is not registered raises `LookupError`.
-  - [ ] A blank, or non-text ID raises `ValueError`.
-  - [ ] `PractitionerService.find_practitioner` follows the same three rules for practitioners.
+  - [x] If the patient is registered, looking up their ID returns that same stored patient.
+  - [x] A valid ID that is not registered raises `LookupError`.
+  - [x] A blank, or non-text ID raises `ValueError`.
+  - [x] `PractitionerService.find_practitioner` follows the same three rules for practitioners.
 - Scope: 
   - Included: 
     - `PatientService.find_patient`, `PractitionerService.find_practitioner` and their tests in `tests/test_services.py`.
   - Not included: 
     - searching by name, login or password rules, changes to `data_store.py` or `domain.py` and `cancel_appointment`.
 - Definition of Done: 
-  - [ ] Code is merged into main using a Pull Request.
-  - [ ] There is a test for every acceptance criterion and they all pass.
-  - [ ] The starter tests still pass.
-  - [ ] A teammate has reviewed the code and all feedback is fixed.
-  - [ ] Evidence is written in the Stage 6 file.
+  - [x] Code is merged into main using a Pull Request.
+  - [x] There is a test for every acceptance criterion and they all pass.
+  - [x] The starter tests still pass.
+  - [x] A teammate has reviewed the code and all feedback is fixed.
+  - [x] Evidence is written in the Stage 6 file.
 - Owner: [Noor Anwari](https://github.com/nooranwari)
 - Actual issue link: [https://github.com/alvinzald/st1-assignment-3/issues/1#issue-5908488276](https://github.com/alvinzald/st1-assignment-3/issues/1#issue-5908488276)
 
@@ -49,22 +49,22 @@ Complete this one group record. Link actual issues, diffs, tests and reviews; av
   - The service should find the appointment and use that method, not repeat the rule.
 - Requirement: FR-06 and FR-07
 - Acceptance criteria:
-  - [ ] Cancelling a `SCHEDULED` appointment sets its status to `CANCELLED` and returns the same appointment object.
-  - [ ] The cancelled appointment can still be found by its ID with status `CANCELLED` (history is kept).
-  - [ ] Cancelling a `CANCELLED` or `COMPLETED` appointment raises `ValueError` and leaves its status unchanged.
-  - [ ] An unknown appointment ID raises `LookupError`.
-  - [ ] A blank or invalid ID raises `ValueError`.
+  - [x] Cancelling a `SCHEDULED` appointment sets its status to `CANCELLED` and returns the same appointment object.
+  - [x] The cancelled appointment can still be found by its ID with status `CANCELLED` (history is kept).
+  - [x] Cancelling a `CANCELLED` or `COMPLETED` appointment raises `ValueError` and leaves its status unchanged.
+  - [x] An unknown appointment ID raises `LookupError`.
+  - [x] A blank or invalid ID raises `ValueError`.
 - Scope:
   - Included:
     - AppointmentService.cancel_appointment and its tests in tests/test_services.py.
   - Not included:
     - deleting appointments, setting the status directly in the service, a cancel option in the menu, rescheduling, and changes to booking or conflict checking.
 - Definition of Done:
-  - [ ] Code is merged into main using a Pull Request.
-  - [ ] There is a test for every acceptance criterion and they all pass.
-  - [ ] Booking and conflict tests still pass.
-  - [ ] A teammate has reviewed the code and all feedback is fixed.
-  - [ ] Evidence is written in the Stage 6 file.
+  - [x] Code is merged into main using a Pull Request.
+  - [x] There is a test for every acceptance criterion and they all pass.
+  - [x] Booking and conflict tests still pass.
+  - [x] A teammate has reviewed the code and all feedback is fixed.
+  - [x] Evidence is written in the Stage 6 file.
 - Owner: [Noor Anwari](https://github.com/nooranwari)
 - Actual issue link: [https://github.com/alvinzald/st1-assignment-3/issues/2#issue-5908596769]([https://github.com/alvinzald/st1-assignment-3/issues/2#issue-5908596769])
 
@@ -160,31 +160,48 @@ Repeat this block per PR. Record actual events, not planned approvals.
   - No code changes requested. Final documentation/scope review and Copilot comparison are still pending.
 - Author response/change and verification:
   - No changes requested at this stage; no author response required. Final review pending.
-- Reviewer recheck and approval: [link]
+- Reviewer recheck and approval: [link](https://github.com/alvinzald/st1-assignment-3/pull/3#pullrequestreview-5594525586)
 - Merge outcome and SHA: [] 
 - Significant Copilot assistance: [summary or none]
 - Linked issue closure: [https://github.com/alvinzald/st1-assignment-3/issues/1]
-- Each member updated main: [Alvin - Confirmed, Kaneez - Confirmed, Noor - Confirmed]
+- Each member updated main:
+  - [x] Alvin
+  - [x] Kaneez
+  - [x] Noor
 - Integrated verification after merge: [command, directory, result and code SHA]
 
 
 - Issue 2 
-PR link and title: Implement appointment cancellation with tests, [https://github.com/alvinzald/st1-assignment-3/pull/6#issue-5957874050]
-- Linked issue and requirement: Issue #2, FR-06/FR-07 
-- Feature branch: [feature/cancel-appointment]
-- Changed behaviour: Cancels a SCHEDULED appointment (status CANCELLED, same object, kept in history); invalid transitions and blank IDs raise ValueError, unknown IDs raise LookupError.
-- Meaningful commits: [f6222d3b559ddc4f2e1a36ad34a0dc48d62c864d] (implement appointment cancellation with tests.)
-- Test command, directory and observed result: [python -m pytest, run in project/, all 13 tests passed]
-- Another-member reviewer: [Alvin Zaldivar]
-- Human observations recorded before Copilot: [link and time]
-- Requirement, responsibilities, test assertions and unrelated-scope checks: [response]
-- Key feedback: [response]
-- Author response/change and verification: [response]
-- Reviewer recheck and approval: [link]
+PR link and title: [Implement appointment cancellation with tests](https://github.com/alvinzald/st1-assignment-3/pull/6#issue-5957874050)
+- Linked issue and requirement: [Issue #2, FR-06/FR-07](https://github.com/alvinzald/st1-assignment-3/issues/2)
+- Feature branch: `feature/cancel-appointment`
+- Changed behaviour:
+  - Cancels a SCHEDULED appointment (status CANCELLED, same object, kept in history)
+  - invalid transitions and blank IDs raise ValueError, unknown IDs raise LookupError
+- Meaningful commits: [f6222d3 implement appointment cancellation with tests](https://github.com/alvinzald/st1-assignment-3/pull/6/changes/f6222d3b559ddc4f2e1a36ad34a0dc48d62c864d)
+- Test command, directory and observed result:
+  - `py main.py` `py -m pytest`
+  - Directory: ` project/`
+  - Observed result: All 13 tests passed (8 starter tests and 5 service tests).
+- Another-member reviewer: [Alvin Zaldivar](https://github.com/alvinzald)
+- Human observations recorded before Copilot: [22 Oct 2026 at 09:37](https://github.com/alvinzald/st1-assignment-3/pull/6#issuecomment-6328083267)
+- Requirement, responsibilities, test assertions and unrelated-scope checks: 
+  - Reviewed against Issue #2 (FR-06 and FR-07).
+  - Cancellation uses the existing data store and delegates state changes to `Appointment.cancel()`. 
+  - Tests cover successful cancellation, retained history, invalid IDs and illegal state transitions. 
+  - All 13 tests passed at commit 512e753.
+- Key feedback:
+  - No significant implementation issues identified.
+- Author response/change and verification: 
+  - No changes requested at this stage; no author response required. Final review pending.
+- Reviewer recheck and approval: [link](https://github.com/alvinzald/st1-assignment-3/pull/6#pullrequestreview-5607143261)
 - Merge outcome and SHA: [response]
 - Significant Copilot assistance: [summary or none]
 - Linked issue closure: [response]
-- Each member updated main: [member and confirmation]
+- Each member updated main:
+  - [ ] Alvin
+  - [ ] Kaneez
+  - [ ] Noor
 - Integrated verification after merge: [command, directory, result and code SHA]
 ## H Copilot collaboration record
 
