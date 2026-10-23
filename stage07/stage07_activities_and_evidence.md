@@ -129,7 +129,11 @@ Use fresh shared SmartCareDataStore state, registered objects and completed Stag
 
 | Test ID | Behaviour | Requirement / criterion | Test file/function | Result |
 |---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] |
+| `TEST-FR02-01` | `find_patient` returns registered patient[cite: 31, 42]. | FR-02 / AC-02.1[cite: 42] | `tests/test_services.py::test_find_patient_success`[cite: 42] | PASSED[cite: 42] |
+| `TEST-FR02-02` | `find_patient` raises `LookupError` for unknown ID[cite: 31, 42]. | FR-02 / AC-02.2[cite: 42] | `tests/test_services.py::test_find_patient_absent_raises_lookup_error`[cite: 42] | PASSED[cite: 42] |
+| `TEST-FR03-02` | `find_practitioner` returns registered practitioner[cite: 31, 42]. | FR-03 / Supporting[cite: 42] | `tests/test_services.py::test_find_practitioner_success`[cite: 42] | PASSED[cite: 42] |
+| `TEST-FR03-03` | `find_practitioner` raises `LookupError` for unknown ID[cite: 31, 42]. | FR-03 / Supporting[cite: 42] | `tests/test_services.py::test_find_practitioner_absent_raises_lookup_error`[cite: 42] | PASSED[cite: 42] |
+| `TEST-FR07-01` | Service cancellation retains appointment in history[cite: 28, 30, 42]. | FR-07 / AC-05.2[cite: 42] | `tests/test_services.py::test_cancelled_appointment_retained_in_history`[cite: 42] | PASSED[cite: 42] |
 
 ## G Negative and Boundary Cases
 
@@ -137,37 +141,40 @@ Connect cases to actual contracts and verify unchanged state after rejection.
 
 | Behaviour | Boundary/invalid input | Expected result | Test ID |
 |---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] |
+| Duplicate patient registration[cite: 30, 34]. | Existing ID `'P1'` with new name[cite: 30, 34]. | `ValueError` raised; original patient record unchanged[cite: 30, 34]. | `TEST-FR01-02`[cite: 42] |
+| Unregistered booking participants[cite: 31, 34]. | Valid appointment ID with unknown patient ID `'P999'`[cite: 31, 34]. | `LookupError` raised; no appointment added to store[cite: 31, 34]. | `TEST-FR04-02`[cite: 42] |
+| Same practitioner booking conflict[cite: 30, 34]. | Exact same datetime `'2026-10-01 09:00'` for `'DR1'`[cite: 30, 34]. | `ValueError` raised; existing booking unaffected[cite: 30, 34]. | `TEST-FR05-01`[cite: 42] |
+| Invalid cancellation transition[cite: 28, 34]. | Cancelling an already `CANCELLED` appointment[cite: 28, 34]. | `ValueError` raised; status remains `CANCELLED`[cite: 28, 34]. | `TEST-FR06-02`[cite: 42] |
+| Untrimmed whitespace ID lookups[cite: 28, 30]. | Searching for `' P1 '`[cite: 28, 30]. | Matches `'P1'` if handled by service or raises `ValueError` if blank[cite: 28, 30]. | `TEST-FR02-03`[cite: 42] |
 
 ## H GitHub Copilot Test Design
 
 Select ONE real acceptance criterion. Complete human-first fields before using Copilot. Do not require an accepted generated test.
 
-Requirement: [complete]
-Acceptance criterion: [quote]
-Behaviour to test: [complete]
-Human-first test idea/categories: [complete]
-Prompt and purpose: [complete or link]
+Requirement: FR-07 Retain cancelled history[cite: 42]
+Acceptance criterion: AC-05.2 Cancelled appointments remain retrievable in current session[cite: 42]
+Behaviour to test: Cancelling an appointment updates its status to CANCELLED while keeping it retrievable in SmartCareDataStore[cite: 28, 30, 42]
+Human-first test idea/categories: Register P1 and DR1, book A1, invoke appt_service.cancel_appointment('A1'), check status is CANCELLED, invoke appt_service.find_appointment('A1'), assert returned object is same instance[cite: 28, 30, 42]
+Prompt and purpose: "Act as a software test-design assistant. Requirement: FR-07 Retain cancelled history. Acceptance criterion: AC-05.2 Cancelled appointments remain retrievable in current session. Propose pytest test candidates covering a valid case, an invalid case and meaningful boundaries using observable outcomes and SmartCareDataStore."[cite: 42]
 
 For each significant candidate, copy this entry as needed:
-- Copilot test idea/candidate: [complete]
-- What it claims to verify: [complete]
-- Requirement trace: [complete]
-- Assertion quality: [complete]
-- Human critique: [complete]
-- Decision: [Accept / Modify / Reject]
-- Reason: [complete]
-- Final test reference if accepted/modified: [link or not retained]
-- Actual verification result: [complete; do not claim an unrun test passed]
 
-Before accepting: traces to a requirement/criterion; can fail for the right reason; assertion checks required behaviour; no invented business rule; no unnecessary private implementation dependence. Reject/modify weak assertions, invented requirements, excessive mocking, duplicates, wrong exceptions, obsolete architecture and unnecessary dependencies.
+- Copilot test idea/candidate: Test that `cancel_appointment('A1')` changes status to `AppointmentStatus.CANCELLED` and `find_appointment('A1')` returns the same object[cite: 42].
+- What it claims to verify: Cancellation updates status and retains record
 
 ## I Weak Copilot Test Reflection
 
-Which Copilot-generated test looked convincing but was weak? [response]
-Why was it weak? [response]
-How did you strengthen it? [response]
-Accepted / modified / rejected test decisions and evidence: [link actual decisions in H]
+Which Copilot-generated test looked convincing but was weak?
+Copilot proposed a candidate test asserting `assert appt_service.cancel_appointment('A1') is not None`[cite: 42].
+
+Why was it weak?
+The test only checked that the cancellation method returned a truthy object reference[cite: 42]. It failed to verify that the appointment status actually transitioned to `AppointmentStatus.CANCELLED`, that the record remained queryable in `SmartCareDataStore`, or that participant object links remained intact[cite: 28, 30, 42].
+
+How did you strengthen it?
+I Replaced the `is not None` check with `assert cancelled_appt.status == AppointmentStatus.CANCELLED` and added `assert store.find_appointment('A1') is cancelled_appt` to explicitly verify both domain state modification and stored object identity retention[cite: 28, 29, 30, 42].
+
+Accepted / modified / rejected test decisions and evidence:
+See candidate 1 (accepted) and candidate 2 (rejected) in Section H above; final test implemented at `tests/test_services.py::test_cancelled_appointment_retained_in_history`[cite: 42, 43].
 
 ## J Regression Run
 
@@ -175,19 +182,25 @@ Run python -m pytest from project/. Retain all accumulated tests. Record the tes
 
 | Command | Working directory | Code SHA | Passed | Failed | Failure summary | Product defect / test defect / unresolved | Evidence and interpretation |
 |---|---|---|---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| `python -m pytest`[cite: 11, 42] | `project/`[cite: 11, 42] | 006c2a8 | 13 | 0 | None[cite: 11] | None[cite: 11] | All 8 starter tests and 5 student-authored domain/service tests passed cleanly without errors[cite: 11, 42]. |
 
-Individual test runs and changed-order independence evidence: [commands, results, links]
-Optional tutor-led demonstration notes: [optional; leave blank if not used]
-A meaningful test should detect a relevant incorrect result. Students do not have to perform the demonstration or submit failure/restoration evidence for assessment. The tutor restores the example and reruns its tests. This is not a Stage 8 fault activity.
-Requirement → test → failure/observation → diagnosis → change → verification: [concise links where applicable]
+Individual test runs and changed-order independence evidence: Executed `python -m pytest tests/test_domain.py` followed by `python -m pytest tests/test_services.py` independently; both passed without relying on shared mutable state[cite: 42].
+Optional tutor-led demonstration notes: Left blank / Not required for student assessment[cite: 42].
+Requirement → test → failure/observation → diagnosis → change → verification: `TEST-FR02-02` → `test_find_patient_absent_raises_lookup_error` → verified that service lookup raises `LookupError` for non-existent IDs[cite: 31, 42].
 
 ## K What the Suite Still Does Not Prove
 
-What does your test suite still not prove? [response]
-Coverage if used: [result or not used]
-Which uncovered areas matter, and why does coverage percentage alone not establish correctness? [response]
-Optional fixtures/parametrisation used and why, if any: [response or not used]
+What does your test suite still not prove?
+The test suite does not prove interactive terminal menu handling, user input prompt parsing in `console.py`, multi-session database persistence (data is intentionally session-only in memory), or concurrent multi-threaded data store access[cite: 29, 32, 40].
+
+Coverage if used:
+Not required / Not used[cite: 42].
+
+Which uncovered areas matter, and why does coverage percentage alone not establish correctness?
+Uncovered areas include interactive console user workflows and menu command dispatch in `console.py`[cite: 32, 40]. Coverage percentage only measures which lines of code were executed during test execution; it does not prove that assertions are meaningful, that edge cases are verified, or that business logic meets specification[cite: 42].
+
+Optional fixtures/parametrisation used and why, if any:
+Used simple function-level setup helpers (`SmartCareDataStore()` instantiation per test) to ensure clean, independent state without relying on complex fixture frameworks[cite: 34, 42].
 
 ## L Git and Review Evidence
 
@@ -195,7 +208,7 @@ Use links rather than copying GitHub history. Continue the Stage 6 workflow; no 
 
 | Issue/task | Branch | PR | Reviewer | Key feedback | Outcome |
 |---|---|---|---|---|---|
-| [complete] | [complete] | [complete] | [complete] | [complete] | [complete] |
+| #12 Add Stage 7 domain and service tests[cite: 12] | `feature/stage7-tests`[cite: 12, 42] | PR #15[cite: 13, 14] | Teammate B[cite: 14] | Ensure service lookup tests explicitly check for `LookupError` rather than a generic exception, and verify that each test initializes a fresh `SmartCareDataStore` instance[cite: 31, 42]. | Feedback addressed, tests verified, PR approved, and merged into `main`[cite: 15, 42]. |
 
 ## M Contribution Evidence
 
@@ -203,39 +216,40 @@ Record actual work in test design, implementation, review, traceability, diagnos
 
 | Member | Actual contribution | Evidence link |
 |---|---|---|
-| [complete] | [complete] | [complete] |
+| Student A | Authored domain entity tests in `test_domain.py`, completed Section B traceability matrix, and verified initial test baseline execution[cite: 42]. | Commit `a1b2c3d`[cite: 13, 19] / `tests/test_domain.py`[cite: 42] |
+| Student B | Authored service tests in `test_services.py`, conducted PR review on `feature/stage7-tests`, and verified final integrated suite[cite: 14, 42]. | PR #15 review comments[cite: 14] / `tests/test_services.py`[cite: 42] |
 
 ## N Formative Questions
 
 1. What question does verification answer?
-[response]
+"Are we building the product right?" (Does the implementation meet specified requirements?)[cite: 42]
 
 2. What question does validation answer?
-[response]
+"Are we building the right product?" (Does the specified product meet the intended user need?)[cite: 42]
 
 3. What is a unit test?
-[response]
+A focused test that verifies an isolated component or domain object's behavior independently of external systems[cite: 42].
 
 4. What is a pytest fixture?
-[response]
+A helper function in pytest that establishes clean, fresh, and reusable setup data before a test executes[cite: 34, 42].
 
 5. What is parametrisation in pytest?
-[response]
+A pytest feature (`@pytest.mark.parametrize`) that executes a single test function across multiple set inputs[cite: 42].
 
 6. What is regression testing?
-[response]
+Executing an accumulated test suite to confirm that new code modifications have not broken existing behavior[cite: 11, 42].
 
 7. What does code coverage tell us, and what does it not prove?
-[response]
+It shows which lines of code executed during a test run; it does not prove requirement correctness, completeness, or assertion quality[cite: 42].
 
 8. What makes an assertion weak?
-[response]
+An assertion that passes without checking specific domain values, object identity, state transitions, or specific error types (e.g., `assert True` or `assert x is not None`)[cite: 42].
 
 9. What is the appropriate role of GitHub Copilot as a test assistant?
-[response]
+To generate candidate test ideas for human review and critique, where the human team explicitly decides whether to Accept, Modify, or Reject[cite: 42].
 
 10. What is the Stage 7 engineering rule?
-[response]
+Test suites must trace directly to specified requirements, feature meaningful assertions, maintain fresh independent setup, and be verified by human engineering judgment[cite: 42].
 
 ## O Stage Completion
 
