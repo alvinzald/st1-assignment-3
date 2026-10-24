@@ -195,14 +195,14 @@ PR link and title: [Implement appointment cancellation with tests](https://githu
 - Author response/change and verification: 
   - No changes requested at this stage; no author response required. Final review pending.
 - Reviewer recheck and approval: [link](https://github.com/alvinzald/st1-assignment-3/pull/6#pullrequestreview-5607143261)
-- Merge outcome and SHA: [response]
-- Significant Copilot assistance: [summary or none]
-- Linked issue closure: [response]
+- Merge outcome and SHA: Merged into main, [https://github.com/alvinzald/st1-assignment-3/commit/2bcd626c0e81394597a464e73011318724c57d06]
+- Significant Copilot assistance: [Copilot chat was used for the required review comparison on PR 2 (see sections H and I)]
+- Linked issue closure: [https://github.com/alvinzald/st1-assignment-3/issues/2#issue-5908596769]
 - Each member updated main:
-  - [ ] Alvin
-  - [ ] Kaneez
-  - [ ] Noor
-- Integrated verification after merge: [command, directory, result and code SHA]
+  - [x] Alvin
+  - [x] Kaneez
+  - [x] Noor
+- Integrated verification after merge: [python -m pytest in porject/, all tests passed] [2bcd626c0e81394597a464e73011318724c57d06]
 ## H Copilot collaboration record
 
 Record meaningful required use, not every trivial completion. Repeat per significant interaction.
@@ -216,13 +216,13 @@ Record meaningful required use, not every trivial completion. Repeat per signifi
 - Verification/evidence: [Code checked against the requirements, all tests]
 
 ### PR 2 — Appointment Cancellation
-Member and task: [response]
-- Prompt/purpose and relevant issue/diff: [response]
-- Summary of output: [response]
-- Human check against actual code, requirements and tests: [response]
-- Decision — Accept / Modify / Reject: [select]
-- Reason: [response]
-- Verification/evidence: [link and result]
+Member and task: [Noor Anwari, run the required Copilot review comparison on PR 2 (cancel_appointment and its tests, issue #2)]
+- Prompt/purpose and relevant issue/diff: [Handout Part H review prompt, with issue #2's criteria (FR-06, FR-07, retained history) and the PR 2 diff (services.py and test_services.py).]
+- Summary of output: [Copilot said the service finds the appointment, raises LookupError if absent, calls appointment.cancel() and returns the same object, and that this matches the intended split. It raised one Important concern (blank or invalid IDs might not raise ValueError, because the service has no explicit check) and two Optional ones (duplicate imports in test_services.py, and invalid-ID tests that only cover '' and '   ').]
+- Human check against actual code, requirements and tests: [Checked data_store.py: find_appointment calls required_text, which raises ValueError for blank, whitespace-only and non-string IDs before the lookup,]
+- Decision — Accept / Modify / Reject: [Reject]
+- Reason: [Copilot saw only the diff, not data_store.py, so it could not see that the store already validates IDs; its concern was conditional ("if the store does not validate"). The imports are harmless and the extra invalid-ID cases are already covered by required_text, so I left the approved code unchanged]
+- Verification/evidence: [f6222d3b559ddc4f2e1a36ad34a0dc48d62c864d],python -m pytest in project, 13 passed in 0.06s
 
 ## I Human versus Copilot review comparison
 
@@ -236,27 +236,27 @@ Member and task: [response]
 - Human judgement accepted, modified or rejected, and why: [We rejected the missing validation finding because the datastore already handles it. We accepted that additional tests could improve test coverage.]
 - Which evidence justified merge approval: [The lookup methods followed the requirements, the existing tests covered the main cases, and the datastore handled ID validation.]
 ### PR 2 — Appointment Cancellation
-- Human reviewer noticed before consulting Copilot: [response]
-- Copilot noticed: [response]
-- Overlap: [response]
-- What did the human reviewer notice that Copilot did not: [response]
-- What did Copilot identify that the human reviewer initially missed: [response]
-- Unsupported or incorrect Copilot suggestion: [response or none identified with explanation]
-- Human judgement accepted, modified or rejected, and why: [response]
-- Which evidence justified merge approval: [response]
+- Human reviewer noticed before consulting Copilot: [https://github.com/alvinzald/st1-assignment-3/pull/6#issuecomment-6328083267]
+- Copilot noticed: [-ID tests]
+- Overlap: []
+- What did the human reviewer notice that Copilot did not: [The datastore already uses required_text() to validate IDs.e]
+- What did Copilot identify that the human reviewer initially missed: [none]
+- Unsupported or incorrect Copilot suggestion: [The "Important" ID-validation risk. The store already validates IDs, which Copilot could not see from the diff alone.]
+- Human judgement accepted, modified or rejected, and why: [Rejected all three points for this PR, with the evidence above. The business logic was confirmed against the requirement and left unchanged.]
+- Which evidence justified merge approval: [Tests passing, the diff reviewed against issue #2's criteria, the store's ID validation, and the reviewer's approval]
 
 ## J Contributions
 
 Repeat per member. Include only categories that describe actual work; write not applicable where appropriate. Pairing or mentoring can be supported by a short corroborated note.
 
-- Member: [response]
-- Implementation: [work and evidence]
-- Testing: [work and evidence]
-- Review: [work and evidence]
-- Issue refinement: [work and evidence]
-- Design and responsibility discussion: [work and evidence]
-- Debugging or integration: [work and evidence]
-- Documentation or team support: [work and evidence]
+- Member: [Noor Anwari, Alvin Zaldivar]
+- Implementation: [Implemented find_patient and find_practitioner (PR 1) and cancel_appointment (PR 2) in services.py.] [Reviewed the PR and Approval]
+- Testing: [Wrote lookup and cancellation tests in test_services.py]
+- Review: [NA]
+- Issue refinement: [Wrote issue #1 (patient search, with practitioner lookup as a supporting criterion) and issue #2 (cancellation and retained history), including acceptance criteria, scope and Definition of Done]
+- Design and responsibility discussion: [Agreed the team workflow in section E]
+- Debugging or integration: [Fixed a failing pytest run (it was run from the repository root instead of project/)]
+- Documentation or team support: [Completed the Stage 6 evidence record for the issues, PR 2, the Copilot comparison and the post-merge fields.]
 
 ## K Exit question
 
