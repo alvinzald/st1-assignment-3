@@ -199,10 +199,10 @@ PR link and title: [Implement appointment cancellation with tests](https://githu
 - Significant Copilot assistance: [Copilot chat was used for the required review comparison on PR 2 (see sections H and I)]
 - Linked issue closure: [https://github.com/alvinzald/st1-assignment-3/issues/2#issue-5908596769]
 - Each member updated main:
-  - [ ] Alvin
-  - [ ] Kaneez
-  - [ ] Noor
-- Integrated verification after merge: [command, directory, result and code SHA]
+  - [x] Alvin
+  - [x] Kaneez
+  - [x] Noor
+- Integrated verification after merge: [python -m pytest in porject/, all tests passed] [2bcd626c0e81394597a464e73011318724c57d06]
 ## H Copilot collaboration record
 
 Record meaningful required use, not every trivial completion. Repeat per significant interaction.
@@ -249,14 +249,14 @@ Member and task: [Noor Anwari, run the required Copilot review comparison on PR 
 
 Repeat per member. Include only categories that describe actual work; write not applicable where appropriate. Pairing or mentoring can be supported by a short corroborated note.
 
-- Member: [response]
-- Implementation: [work and evidence]
-- Testing: [work and evidence]
-- Review: [work and evidence]
-- Issue refinement: [work and evidence]
-- Design and responsibility discussion: [work and evidence]
-- Debugging or integration: [work and evidence]
-- Documentation or team support: [work and evidence]
+- Member: [Noor Anwari, Alvin Zaldivar]
+- Implementation: [Implemented find_patient and find_practitioner (PR 1) and cancel_appointment (PR 2) in services.py.] [Reviewed the PR and Approval]
+- Testing: [Wrote lookup and cancellation tests in test_services.py]
+- Review: [NA]
+- Issue refinement: [Wrote issue #1 (patient search, with practitioner lookup as a supporting criterion) and issue #2 (cancellation and retained history), including acceptance criteria, scope and Definition of Done]
+- Design and responsibility discussion: [Agreed the team workflow in section E]
+- Debugging or integration: [Fixed a failing pytest run (it was run from the repository root instead of project/)]
+- Documentation or team support: [Completed the Stage 6 evidence record for the issues, PR 2, the Copilot comparison and the post-merge fields.]
 
 ## K Exit question
 
