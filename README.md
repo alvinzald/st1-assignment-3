@@ -5,10 +5,13 @@ Baseline: Stage 6 foundation, 2026 revision 2. This starter deliberately leaves 
 
 ## Group index
 
-- Group and tutorial: [complete]
-- Member names, GitHub usernames and UG/PG cohorts: [complete]
-- Shared repository URL: [complete]
-- Latest completed stage: [complete]
+- Group and tutorial: Wed 4:30 - 6:30 Group 6
+- Member names, GitHub usernames and UG/PG cohorts:
+  - Member 1: Noor Anwari, [nooranwari](https://github.com/nooranwari), UG 
+  - Member 2: Alvin Zaldivar, [alvinzald](https://github.com/alvinzald), PG 
+  - Member 3: Kaneez Fiza, [u3327559](https://github.com/u3327559), UG
+- Shared repository URL: [https://github.com/alvinzald/st1-assignment-3](https://github.com/alvinzald/st1-assignment-3)
+- Latest completed stage: Stage 7
 - Verified code SHA: [complete]
 - Test command, working directory and observed result: [complete]
 - Final submitted SHA, if different from tested code SHA: [complete; explain evidence-only changes]
