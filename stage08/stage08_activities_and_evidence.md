@@ -178,7 +178,7 @@ Response and reason:
 - Focused verification result: [[F8-01 after repair](evidence/f8_01_booking_conflict_after_repair.txt)]
   - [x] [`test_conflict_rule_and_different_practitioner` passed after repair.]
   - [x] [`test_f8_01_rejects_double_booking_without_mutation` passed after repair.]
-- Repair SHA: [82552e5d45155e9367c51dff90ece2fdec23618a]
+- Repair SHA: [`82552e5d45155e9367c51dff90ece2fdec23618a`]
 
 ## D. F8-02 diagnosis and repair
 
@@ -215,7 +215,7 @@ Response and reason:
   - [x] [`test_cancel_success_and_history` passed after repair.]
   - [x] [`test_cancel_invalid_status` passed after repair.]
   - [x] [`test_f8_02_cancelled_appointment_remains_accessible` passed after repair.]
-- Repair SHA: [5af4c990f1a5aa2ee896c424975bb5dc855cd2e7]
+- Repair SHA: [`5af4c990f1a5aa2ee896c424975bb5dc855cd2e7`]
 
 ## E. Human-first hypotheses
 
@@ -309,7 +309,7 @@ Unrelated failures investigated / resolution: [Not applicable: All three initial
 - External behaviour to preserve / relevant tests: [The method must still raise `ValueError` for invalid IDs, return `None` for missing appointments, and return the same appointment object regardless of status. The F8-02 regression test and existing service tests protect these behaviours, while the full 20-test suite checks for unintended changes.]
 - Before result: see G, full passing suite.
 - Actual change / diff: [Replaced the loop in `find_appointment()` with `self._appointments.get(appointment_id.strip())` and added a docstring for consistency. ]
-- Separate refactor SHA: [pending]
+- Separate refactor SHA: [`afe473afa7fc9ab0486777db97daf7c4749ab585`]
 - Focused after-refactor command and directory: [`python -m pytest tests/test_regressions.py::test_f8_02_cancelled_appointment_remains_accessible tests/test_services.py::test_cancel_success_and_history tests/test_services.py::test_cancel_invalid_status -v` in `project/`]
   - Results: 3 passed
   - Evidence: [[Appointment Lookup - Focused](evidence/appointment_lookup_refactor_focused.txt)]
