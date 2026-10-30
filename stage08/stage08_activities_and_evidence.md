@@ -175,10 +175,10 @@ Response and reason:
 - Human hypothesis and intended checks: [Section E: F8-01 Human Entry](#f8-01-human-entry)
 - Supported root cause and inspected code/runtime evidence: [`has_practitioner_conflict()` uses `!=` instead of `==` when checking practitioner IDs. This made it not detect bookings from the same practitioner at the same time as a conflict. Code inspection and failing regression test confirms the issue.]
 - Smallest justified fix / diff / why other behaviour is preserved: [Changed `!=` to `==` in the practitioner ID comparison. This operator change corrects the conflict detection without modifying the booking process or other methods. The existing test also confirmed that different practitioners can still be booked at the same time.]
-- Focused verification result:
-  - [x] `test_conflict_rule_and_different_practitioner` passed after repair.
-  - [x] `test_f8_01_rejects_double_booking_without_mutation` passed after repair.
-- Repair SHA: [pending]
+- Focused verification result: [[F8-01 after repair](evidence/f8_01_after_repair.txt)]
+  - [x] [`test_conflict_rule_and_different_practitioner` passed after repair.]
+  - [x] [`test_f8_01_rejects_double_booking_without_mutation` passed after repair.]
+- Repair SHA: [82552e5d45155e9367c51dff90ece2fdec23618a]
 
 ## D. F8-02 diagnosis and repair
 
@@ -209,9 +209,13 @@ Response and reason:
     - Supporting observation: [The appointment remains in `list_appointments()` with `cancelled` status, but lookup returns `None`.]
     - Evidence: [F8-02 failing regression test](evidence/f8_02_before_repair.txt)
 - Human hypothesis and intended checks: [Section E: F8-02 Human Entry](#f8-02-human-entry)
-- Supported root cause and inspected code/runtime evidence: [complete after diagnosis]
-- Smallest justified fix / diff / why other behaviour is preserved: [complete]
-- Repair SHA / focused verification result: [complete]
+- Supported root cause and inspected code/runtime evidence: [In `data_store.py`: `find_appointment()` filtered out appointments with cancelled status. The regression test showed that the cancelled appointment appears in `list_appointments()`, but `find_appointment('A1')` returned `None`. This confirms that the issue was caused by the lookup filter rather than deletion.]
+- Smallest justified fix / diff / why other behaviour is preserved: [In find_appointment(): Removed the `appointment.status.value != "cancelled"` condition. This allows cancelled appointments to not be rejected while preserving the existing ID matching logic. All three focused tests passed after the change.]
+- Focused verification result: [[F8-02 after repair](evidence/f8_02_after_repair.txt)]
+  - [x] [`test_cancel_success_and_history` passed after repair.]
+  - [x] [`test_cancel_invalid_status` passed after repair.]
+  - [x] [`test_f8_02_cancelled_appointment_remains_accessible` passed after repair.]
+- Repair SHA: [pending]
 
 ## E. Human-first hypotheses
 
