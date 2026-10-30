@@ -322,77 +322,90 @@ Unrelated failures investigated / resolution: [Not applicable: All three initial
 
 ## I. Git, human review and integration
 
-Issues for both defects / refactor scope and owners: [complete]
-Branch / prepared, repair and refactor checkpoints: [link B/C/D/H]
-PR link and another member's reviewer identity: [complete]
-Key human feedback, difference from Copilot findings and response/outcome: [complete]
-Actual review approval / merge evidence: [complete]
-Integrated code SHA and team pull/retest command / working directory / result: [complete]
-Evidence-only later SHA / explanation if different: [complete or not applicable]
-Each member's substantive contribution and artefact: [complete]
+- Issues for both defects / refactor scope and owners: 
+  - F8-01: [The system accepted a double booking for the same practitioner at the exact same date and time instead of rejecting it.]
+  - F8-02: [Cancelled appointments become inaccessible through lookup.]
+  - Refactor: [Simplified `find_appointment()` in `project/smartcare/data_store.py` by replacing unnecessary iteration with a direct dictionary lookup using `.get()` and adding a docstring. No intended changes to external behaviour.]
+  - Owner: [Alvin Zaldivar]
+- Branch / prepared, repair and refactor checkpoints: 
+  - Branch: [`debug/stage08`]
+  - Checkpoint B: [`edd11e9fa09edfb7e9b61b13029ac5b11c50f3b3`]
+  - Checkpoint C: [`82552e5d45155e9367c51dff90ece2fdec23618a`]
+  - Checkpoint D: [`5af4c990f1a5aa2ee896c424975bb5dc855cd2e7`]
+  - Checkpoint H: [`afe473afa7fc9ab0486777db97daf7c4749ab585`]
+- PR link: [[Pull Request #9](https://github.com/alvinzald/st1-assignment-3/pull/9)]
+- Another member's reviewer identity: [Kaneez Fiza]
+- Key human feedback, difference from Copilot findings and response/outcome: [pending review]
+- Actual review approval / merge evidence: [pending review]
+- Integrated code SHA and team pull/retest command / working directory / result: [pending review]
+- Evidence-only later SHA / explanation if different: [pending integration]
+- Each member's substantive contribution and artefact: 
+  - Alvin Zaldivar: [Investigated and repaired F8-01 and F8-02, developed regression tests, evaluated Copilot diagnoses, performed the behaviour-preserving refactoring, and documented the Stage 8 evidence. Artefacts: `data_store.py`, `test_regressions.py`, `stage08_activities_and_evidence.md`, and supporting evidence files.]
+  - Kaneez Fiza: [Reviewer]
+  - Noor Anwari: [Integrator]
 
 ## J. Required reflections
 
-1. Which Copilot diagnosis appeared convincing but lacked evidence? [complete; report honestly if none and discuss the least-supported real suggestion]
-2. What evidence changed your group's view? [complete]
-3. How did regression tests protect the refactoring? [complete]
+1. Which Copilot diagnosis appeared convincing but lacked evidence? [None stood out as convincing but unsupported. I  already inspected the code and run regression tests before consulting Copilot, so I had strong evidence for my hypotheses. Its alternative suggestions, such as an incorrect appointment ID in F8-02, were possible explanations but did not fit the evidence I already gathered.]
+2. What evidence changed your group's view? [I initially suspected that cancelled appointments were being deleted. However, the regression test showed that the appointment remained in `list_appointments()` but could not be retrieved through `find_appointment()`. This led us to investigate the lookup condition instead.]
+3. How did regression tests protect the refactoring? [The regression tests helped confirm that changing `find_appointment()` to use a direct dictionary lookup did not reintroduce either defect. The full suite passed all 20 tests before and after refactoring, confirming the tested behaviour was preserved.]
 
 ## K. Ten formative questions
 
 1. What should an engineer do before changing code in response to a failure?
 
-Response: [complete]
+Response: [Reproduce the issue, check the expected behaviour, and investigate what might be causing it.]
 
 2. Where should expected behaviour come from during debugging?
 
-Response: [complete]
+Response: [System requirements, acceptance criteria, and existing contracts, not personal assumptions.]
 
 3. What is a debugging hypothesis?
 
-Response: [complete]
+Response: [A possible explanation for a problem that can be checked through testing or code inspection.]
 
 4. What is a regression test and why is it retained?
 
-Response: [complete]
+Response: [A regression test checks that a previously fixed issue does not return after making changes. Keeping these tests helps catch problems introduced by future updates.]
 
 5. What is meant by root cause?
 
-Response: [complete]
+Response: [The underlying issue that caused the failure, rather than just the error or symptom we observed.]
 
 6. What is refactoring?
 
-Response: [complete]
+Response: [Improving how the code is written or organised without changing what the program actually does.]
 
 7. What is a swallowed exception?
 
-Response: [complete]
+Response: [An exception that gets caught but is ignored or not properly handled, which can make problems harder to identify.]
 
 8. What is a code smell?
 
-Response: [complete]
+Response: [Something in the code that suggests it could be improved, such as unnecessary repetition or overly complicated logic. It doesn't necessarily mean the code is broken.]
 
 9. How should GitHub Copilot-generated debugging diagnoses be treated?
 
-Response: [complete]
+Response: [Treated as possible explanations, not confirmed answers. They still need to be checked against the code, requirements, and test results.]
 
 10. What is the Stage 8 engineering rule?
 
-Response: [complete]
+Response: [Diagnose the problem before fixing it. Changes should be based on evidence, kept as small as possible, and tested to make sure existing behaviour is preserved.]
 
 ## L. Completion and handover
 
-- [ ] Existing project, earlier tests and stage records preserved.
-- [ ] Passing Stage 7 SHA and safe preparation details recorded.
-- [ ] Both defects reproduced with meaningful failing tests.
-- [ ] Both human hypotheses recorded before Copilot; actual suggestions evaluated with evidence.
-- [ ] Supported causes and minimal repairs explained; focused and full regression results recorded.
-- [ ] One genuine refactor verified under passing before/after tests.
+- [x] Existing project, earlier tests and stage records preserved.
+- [x] Passing Stage 7 SHA and safe preparation details recorded.
+- [x] Both defects reproduced with meaningful failing tests.
+- [x] Both human hypotheses recorded before Copilot; actual suggestions evaluated with evidence.
+- [x] Supported causes and minimal repairs explained; focused and full regression results recorded.
+- [x] One genuine refactor verified under passing before/after tests.
 - [ ] Human PR review, feedback resolution and integrated retest recorded.
-- [ ] Tutorial, three reflections and ten formative responses complete.
-- [ ] Local recovery metadata excluded from submitted source.
+- [x] Tutorial, three reflections and ten formative responses complete.
+- [x] Local recovery metadata excluded from submitted source.
 - [ ] Same project and full suite ready for Stage 9 after Stage 8 integration, verification and recording.
 
 Verified integrated code SHA / result: see I.
-Submitted SHA and evidence-only difference if any: [complete]
-Unresolved issues or incomplete checks / owner / next action: [complete]
-Handover note: [complete]
+Submitted SHA and evidence-only difference if any: [pending]
+Unresolved issues or incomplete checks / owner / next action: [pending]
+Handover note: [Both Stage 8 defects have been repaired, regression tests added, and appointment lookup refactored. The code and supporting evidence are included in the PR. Once reviewed, merged, and verified on main, the project will be ready for Stage 9.]
