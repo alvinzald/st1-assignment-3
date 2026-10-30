@@ -148,7 +148,7 @@ Response and reason:
     - [F8-01: `test_conflict_rule_and_different_practitioner`: A conflicting booking was accepted instead of raising ValueError.]
     - [F8-02: `test_cancel_success_and_history`: Looking up a cancelled appointment raised LookupError.]
     - [F8-02: `test_cancel_invalid_status`: Repeated cancellation raised LookupError instead of ValueError. ]
-  - Evidence: [[Initial Stage 8 pytest results](evidence/initial_prepared_pytest.txt)]
+  - Evidence: [[Initial Stage 8 pytest results](evidence/initial_tests.txt)]
 
 ## C. F8-01 diagnosis and repair
 
@@ -171,11 +171,11 @@ Response and reason:
     - Test name: [`test_f8_01_rejects_double_booking_without_mutation`]
     - Expected result: [`ValueError` raised for conflicting booking, with existing stored appointments unchanged.]
     - Actual result: [Failed: DID NOT RAISE `ValueError`]
-    - Evidence: [F8-01 failing regression test](evidence/f8_01_before_repair.txt)
+    - Evidence: [F8-01 failing regression test](evidence/f8_01_booking_conflict_before_repair.txt)
 - Human hypothesis and intended checks: [Section E: F8-01 Human Entry](#f8-01-human-entry)
 - Supported root cause and inspected code/runtime evidence: [`has_practitioner_conflict()` uses `!=` instead of `==` when checking practitioner IDs. This made it not detect bookings from the same practitioner at the same time as a conflict. Code inspection and failing regression test confirms the issue.]
 - Smallest justified fix / diff / why other behaviour is preserved: [Changed `!=` to `==` in the practitioner ID comparison. This operator change corrects the conflict detection without modifying the booking process or other methods. The existing test also confirmed that different practitioners can still be booked at the same time.]
-- Focused verification result: [[F8-01 after repair](evidence/f8_01_after_repair.txt)]
+- Focused verification result: [[F8-01 after repair](evidence/f8_01_booking_conflict_after_repair.txt)]
   - [x] [`test_conflict_rule_and_different_practitioner` passed after repair.]
   - [x] [`test_f8_01_rejects_double_booking_without_mutation` passed after repair.]
 - Repair SHA: [82552e5d45155e9367c51dff90ece2fdec23618a]
@@ -207,15 +207,15 @@ Response and reason:
     - Expected result: [`find_appointment('A1')` returns the original cancelled appointment.]
     - Actual result: [`AssertionError: assert None is <smartcare.domain.Appointment object at 0x000001C731A7B4D0>.`]
     - Supporting observation: [The appointment remains in `list_appointments()` with `cancelled` status, but lookup returns `None`.]
-    - Evidence: [F8-02 failing regression test](evidence/f8_02_before_repair.txt)
+    - Evidence: [F8-02 failing regression test](evidence/f8_02_cancelled_lookup_before_repair.txt)
 - Human hypothesis and intended checks: [Section E: F8-02 Human Entry](#f8-02-human-entry)
 - Supported root cause and inspected code/runtime evidence: [In `data_store.py`: `find_appointment()` filtered out appointments with cancelled status. The regression test showed that the cancelled appointment appears in `list_appointments()`, but `find_appointment('A1')` returned `None`. This confirms that the issue was caused by the lookup filter rather than deletion.]
 - Smallest justified fix / diff / why other behaviour is preserved: [In find_appointment(): Removed the `appointment.status.value != "cancelled"` condition. This allows cancelled appointments to not be rejected while preserving the existing ID matching logic. All three focused tests passed after the change.]
-- Focused verification result: [[F8-02 after repair](evidence/f8_02_after_repair.txt)]
+- Focused verification result: [[F8-02 after repair](evidence/f8_02_cancelled_lookup_after_repair.txt)]
   - [x] [`test_cancel_success_and_history` passed after repair.]
   - [x] [`test_cancel_invalid_status` passed after repair.]
   - [x] [`test_f8_02_cancelled_appointment_remains_accessible` passed after repair.]
-- Repair SHA: [pending]
+- Repair SHA: [5af4c990f1a5aa2ee896c424975bb5dc855cd2e7]
 
 ## E. Human-first hypotheses
 
@@ -240,7 +240,7 @@ Complete both entries BEFORE Copilot. C/D supply observed/expected/reproduction/
 Use the full handout prompt separately for BOTH defects, after E. Keep each actual prompt or accessible reference; include observed behaviour, expected behaviour, reproduction, failing test, human hypothesis, relevant code, three ranked causes and discriminating checks, with the no-rewrite/no-invented-requirements constraints.
 
 ### F8-01 Copilot review
-Actual prompt / output reference and member: [[F8-01 Copilot Prompt](evidence/f8_01_copilot.md), Alvin Zaldivar]
+Actual prompt / output reference and member: [[F8-01 Copilot Prompt](evidence/f8_01_booking_conflict_copilot.md), Alvin Zaldivar]
 1. Suggestion: The practitioner comparison is inverted in `has_practitioner_conflict()`.
    - Evidence to check: Check `project/smartcare/data_store.py:108–114`: the condition uses `appointment.practitioner.practitioner_id != practitioner_id`. For the reproduced D1/D1 booking, that condition is false, so the conflict is missed. This best fits the symptom, but remains a hypothesis until the executed code path is confirmed.
    - Observed evidence: [The code uses `!=`, and our regression test failed because the second booking did not raise `ValueError`.]
@@ -263,7 +263,7 @@ Actual prompt / output reference and member: [[F8-01 Copilot Prompt](evidence/f8
 Final human conclusion and comparison with initial hypothesis: [The #1 suggestion from copilot supports the hypothesis. Copilot did not change my original conclusion, and the alternative explanations were less consistent with the available evidence.]
 
 ### F8-02 Copilot review
-Actual prompt / output reference and member: [[F8-02 Copilot Prompt](evidence/f8_02_copilot.md), Alvin Zaldivar]
+Actual prompt / output reference and member: [[F8-02 Copilot Prompt](evidence/f8_02_booking_conflict_copilot.md), Alvin Zaldivar]
 1. Suggestion: find_appointment() filters out cancelled records.
    - Evidence to check: In `project/smartcare/data_store.py:92–96`, inspect the ID match and status condition. It returns a matching appointment only when `appointment.status.value != "cancelled"`. After cancellation, compare `store.list_appointments()` with `store.find_appointment('A1')`; the regression test reports the appointment remains listed while lookup returns None, which fits this cause.
    - Observed evidence: [The appointment remains stored with `CANCELLED` status, but `find_appointment('A1')` returns None. The code explicitly excludes cancelled appointments.]
@@ -281,7 +281,7 @@ Actual prompt / output reference and member: [[F8-02 Copilot Prompt](evidence/f8
    - Observed evidence: [The regression test confirms  that the appointment remains in `list_appointments()`. The services are initialised using the same `SmartCareDataStore` instance.]
    - Assessment: [Wrong]
    - Decision: [Reject]
-   - Reason: [	The appointment remains stored, and the services share the same data store.]
+   - Reason: [The appointment remains stored, and the services share the same data store.]
 
 Final human conclusion and comparison with initial hypothesis: [My initial hypothesis was that cancellation deleted the appointment from storage. After inspecting the code and running the regression test, I revised my hypothesis to the lookup method incorrectly filtering out cancelled appointments. Copilot's top-ranked diagnosis supported this revised hypothesis, while the other suggestions were less consistent with the evidence.]
 
@@ -289,24 +289,36 @@ Final human conclusion and comparison with initial hypothesis: [My initial hypot
 
 | Checkpoint | Code SHA or precise diff | Command and working directory | Actual result and artefact reference |
 |---|---|---|---|
-| F8-01 before repair | [complete] | [complete] | [complete] |
-| F8-01 after repair | [complete] | [complete] | [complete] |
-| F8-02 before repair | [complete] | [complete] | [complete] |
-| F8-02 after repair | [complete] | [complete] | [complete] |
-| Full suite after both repairs, before refactor | [complete] | [complete] | [complete] |
+| F8-01 before repair | [`edd11e9fa09edfb7e9b61b13029ac5b11c50f3b3`] | [`python -m pytest tests/test_regressions.py::test_f8_01_rejects_double_booking_without_mutation -v` in `project/`] | [[F8-01 Before Repair](evidence/f8_01_booking_conflict_before_repair.txt)] |
+| F8-01 after repair | [`82552e5d45155e9367c51dff90ece2fdec23618a`] | [`python -m pytest tests/test_regressions.py::test_f8_01_rejects_double_booking_without_mutation tests/test_starter.py::test_conflict_rule_and_different_practitioner -v` in `project/`] | [[F8-01 After Repair](evidence/f8_01_booking_conflict_after_repair.txt)] |
+| F8-02 before repair | [`edd11e9fa09edfb7e9b61b13029ac5b11c50f3b3`] | [`python -m pytest tests/test_regressions.py::test_f8_02_cancelled_appointment_remains_accessible -v` in `project/`] | [[F8-02 Before Repair](evidence/f8_02_cancelled_lookup_before_repair.txt)] |
+| F8-02 after repair | [`5af4c990f1a5aa2ee896c424975bb5dc855cd2e7`] | [`python -m pytest tests/test_regressions.py::test_f8_02_cancelled_appointment_remains_accessible tests/test_services.py::test_cancel_success_and_history tests/test_services.py::test_cancel_invalid_status -v` in `project/`] | [[F8-02 After Repair](evidence/f8_02_cancelled_lookup_after_repair.txt)] |
+| Full suite after both repairs, before refactor | [`5af4c990f1a5aa2ee896c424975bb5dc855cd2e7`] | [`python -m pytest tests -v in project/`] | [[Full Suite After Repairs](evidence/full_suite_after_repairs.txt)] |
 
-Explain how the assertions detect each relevant incorrect result and protect previous behaviour: [complete]
-Unrelated failures investigated / resolution: [complete or not applicable with reason]
+Explain how the assertions detect each relevant incorrect result and protect previous behaviour:
+ - [F8-01 verifies that conflicting bookings raise `ValueError` without changing existing records, while allowing different practitioners to share a timeslot.]
+ - [F8-02 verifies that cancelled appointments remain stored and retrievable, and that repeated cancellation raises `ValueError` without changing their status.]
+
+Unrelated failures investigated / resolution: [Not applicable: All three initial failures were related to F8-01 or F8-02. After both repairs, all 20 tests passed with no remaining failures.]
 
 ## H. Refactoring decision and before/after verification
 
-Smell and exact location: [complete]
-Small proposed structural change / why justified: [complete before editing]
-External behaviour to preserve / relevant tests: [complete]
-Before result: see G, full passing suite.
-Actual change / diff / separate refactor SHA: [complete]
-Focused and full after-refactor commands / working directory / results / evidence: [complete]
-Result — accepted, revised or rejected / reason / behaviour-preservation conclusion: [complete]
+- Smell: [Inefficient dictionary lookup in `find_appointment()`]
+- Exact Location: [`project/smartcare/data_store.py:92`]
+- Small proposed structural change / why justified: [Replace the loop in `find_appointment()` with a direct dictionary lookup using `.get()`. This simplifies the code, improves lookup efficiency, and makes it consistent with the other data-store lookup methods without changing its expected behaviour.]
+- External behaviour to preserve / relevant tests: [The method must still raise `ValueError` for invalid IDs, return `None` for missing appointments, and return the same appointment object regardless of status. The F8-02 regression test and existing service tests protect these behaviours, while the full 20-test suite checks for unintended changes.]
+- Before result: see G, full passing suite.
+- Actual change / diff: [Replaced the loop in `find_appointment()` with `self._appointments.get(appointment_id.strip())` and added a docstring for consistency. ]
+- Separate refactor SHA: [pending]
+- Focused after-refactor command and directory: [`python -m pytest tests/test_regressions.py::test_f8_02_cancelled_appointment_remains_accessible tests/test_services.py::test_cancel_success_and_history tests/test_services.py::test_cancel_invalid_status -v` in `project/`]
+  - Results: 3 passed
+  - Evidence: [[Appointment Lookup - Focused](evidence/appointment_lookup_refactor_focused.txt)]
+- Full after-refactor commands and directory: [`python -m pytest tests -v` in `project/`]
+  - Results: 20 passed
+  - Evidence: [[Appointment Lookup - Full Suite](evidence/appointment_lookup_refactor_full_suite.txt)]
+- Result: [Accepted]
+  - Reason: [Replacing the unnecessary loop with a direct dictionary lookup improved readability and efficiency.]
+  - Behaviour-preservation conclusion: [The focused tests and full suite passed after refactoring (20/20).]
 
 ## I. Git, human review and integration
 
