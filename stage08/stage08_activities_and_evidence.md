@@ -335,10 +335,10 @@ Unrelated failures investigated / resolution: [Not applicable: All three initial
   - Checkpoint H: [`afe473afa7fc9ab0486777db97daf7c4749ab585`]
 - PR link: [[Pull Request #9](https://github.com/alvinzald/st1-assignment-3/pull/9)]
 - Another member's reviewer identity: [Kaneez Fiza]
-- Key human feedback, difference from Copilot findings and response/outcome: [pending review]
-- Actual review approval / merge evidence: [pending review]
-- Integrated code SHA and team pull/retest command / working directory / result: [pending review]
-- Evidence-only later SHA / explanation if different: [pending integration]
+- Key human feedback, difference from Copilot findings and response/outcome: [The reviewer confirmed that both repairs were minimal and correctly addressed the defects. She also supported the refactoring and regression evidence. Unlike Copilot's suggested diagnoses, the human review evaluated the completed work. No code changes were requested, only the completion of the integration documentation.]
+- Actual review approval / merge evidence: [The teammate provided a positive written review in Stage 8 Review and merged the pull request into main. PR: [PR link](https://github.com/alvinzald/st1-assignment-3/pull/9).]
+- Integrated code SHA and team pull/retest command / working directory / result: [09604c9d26690c687e36d79dd490aa9c7522fdf0]
+- Evidence-only later SHA / explanation if different: [09604c9d26690c687e36d79dd490aa9c7522fdf0]
 - Each member's substantive contribution and artefact: 
   - Alvin Zaldivar: [Investigated and repaired F8-01 and F8-02, developed regression tests, evaluated Copilot diagnoses, performed the behaviour-preserving refactoring, and documented the Stage 8 evidence. Artefacts: `data_store.py`, `test_regressions.py`, `stage08_activities_and_evidence.md`, and supporting evidence files.]
   - Kaneez Fiza: [Reviewer]
@@ -400,12 +400,12 @@ Response: [Diagnose the problem before fixing it. Changes should be based on evi
 - [x] Both human hypotheses recorded before Copilot; actual suggestions evaluated with evidence.
 - [x] Supported causes and minimal repairs explained; focused and full regression results recorded.
 - [x] One genuine refactor verified under passing before/after tests.
-- [ ] Human PR review, feedback resolution and integrated retest recorded.
+- [x] Human PR review, feedback resolution and integrated retest recorded.
 - [x] Tutorial, three reflections and ten formative responses complete.
 - [x] Local recovery metadata excluded from submitted source.
-- [ ] Same project and full suite ready for Stage 9 after Stage 8 integration, verification and recording.
+- [x] Same project and full suite ready for Stage 9 after Stage 8 integration, verification and recording.
 
 Verified integrated code SHA / result: see I.
-Submitted SHA and evidence-only difference if any: [pending]
-Unresolved issues or incomplete checks / owner / next action: [pending]
+Submitted SHA and evidence-only difference if any: [09604c9d26690c687e36d79dd490aa9c7522fdf0]
+Unresolved issues or incomplete checks / owner / next action: [No known functional issues remain. All 20 tests passed before merging.]
 Handover note: [Both Stage 8 defects have been repaired, regression tests added, and appointment lookup refactored. The code and supporting evidence are included in the PR. Once reviewed, merged, and verified on main, the project will be ready for Stage 9.]
