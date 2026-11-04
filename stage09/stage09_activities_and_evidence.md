@@ -84,12 +84,20 @@ No matches return an empty list, unknown IDs raise LookupError, and invalid inpu
 
 | Requirement / test ID | Code location | Case and meaningful assertion | Actual result | Evidence link |
 |---|---|---|---|---|
-| | | | | |
-
+|QRY-01 |queries.py, test_queries.py |Checks that only appointments for the requested practitioner are returned. |Passed | |
+|QRY-02 |queries.py, test_queries.py |Checks status filtering, all statuses and no matching appointments.|Passed |
+|QRY-03 |queries.py, test_queries.py |Checks sorting by date/time and appointment ID without changing the original list.|Passed |
+|QRY-04 |queries.py, test_queries.py |Checks empty results, unknown practitioners and invalid inputs.|Passed | |
+|FP-01 |queries.py, test_queries.py |Checks that repeated queries give the same result without changing the original data.|Passed | |
+|FP-02 |queries.py, test_queries.py |Checks that a new list is returned for empty, sorted and unsorted inputs. |Passed | |
+|FP-03 |queries.py, test_queries.py |Checks that the named sorting key is used.|Passed | |
+|History|services.py, test_queries.py |Checks that cancelled appointments remain in the history.|Passed | |
 Include practitioner isolation, every enum status/default all, equal-time ID tie-break, named-key reuse, repeated calls, empty/already-sorted fresh lists, unchanged source order/fields, known-empty/unknown/invalid service cases and retained history.
 
-Purity explanation from code inspection, including absence of hidden state and I/O: <!-- response -->
-What the tests do and do not establish: <!-- response -->
+Purity explanation from code inspection, including absence of hidden state and I/O: 
+[The select_appointments() function only uses the inputs provided to it. It filters appointments by practitioner ID and status, then sorts them using appointment_sort_key(). It uses sorted() to return a new list without changing the original list. The function does not access the data store, use global variables, print anything or ask for user input.]
+What the tests do and do not establish: 
+[The tests check that appointments are filtered and sorted correctly, a new list is returned, and the original data is not changed. They also check invalid inputs, empty results and cancelled appointment history. However, passing these tests does not mean the whole system is working correctly. The tests only cover the cases we tested. The console menu and complete user workflow still need to be tested.]
 
 ## D. Integrated console and workflow evidence
 
