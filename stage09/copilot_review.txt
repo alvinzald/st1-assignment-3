@@ -1,0 +1,27 @@
+## Observed evidence
+
+- **Query purity and ordering are implemented and tested.** `select_appointments` filters by practitioner and optional status, then returns a `sorted()` result using `appointment_sort_key`, which orders by date/time and appointment ID. `test_queries.py` covers practitioner/status filtering, tie ordering, unchanged source order, repeatability, fresh lists, and preservation of appointment object references.
+- **Responsibilities are generally separated.** `AppointmentService.list_practitioner_appointments` checks the practitioner and status, obtains appointments from the store, and delegates to the query. `SmartCareDataStore.list_appointments` returns a new list; the query does not call the store or perform I/O. `run_menu` handles input, output, status parsing, and expected validation/lookup errors.
+- **Rejections and retained history have meaningful coverage.** Booking validations precede insertion in `book_appointment`, and cancellation delegates to the domain guard without removing the appointment. `test_workflows.py`, `test_regressions.py`, and `test_queries.py` check conflicts, rejected requests, cancellation, and retained/listable history.
+
+## Findings
+
+### Important — Console behavior lacks automated tests
+
+No test in the supplied test suite invokes `run_menu` or tests `parse_date_time`; the relevant automated query and workflow coverage is in `test_queries.py` and `test_workflows.py`. Manual evidence in `console_test_evidence.txt` is useful, but it does not protect the menu’s input/output and recovery behavior from regressions in the test suite. Also compare the Stage 9 evidence checklist, which calls for malformed **and impossible** dates, with the transcript: it shows a malformed-format date, but not an impossible calendar date (`stage09_activities_and_evidence.md`, `parse_date_time`).
+
+**Evidence to check:** menu options and error handling at `console.py` and `console.py`; the lack of automated console cases in the listed test files; the manual transcript’s invalid-date input.
+
+### Optional — Direct query input-validation contract is not established
+
+The service rejects a non-enum status, but `select_appointments` itself does not validate its practitioner ID or status. For example, a string status supplied directly to the query simply fails to match appointments rather than raising `ValueError`. This is not a demonstrated application-path defect because the service validates status first; it is a contract/test clarity point if the query is intended to be a separately validated public API.
+
+**Evidence to check:** the query signature and filter at `queries.py`, service-side validation at `services.py`, and the invalid-status test in `test_queries.py`.
+
+### Optional — Stored participant details remain mutable through returned objects
+
+The store returns new list containers, but they contain the stored objects (`data_store.py`). Patient names and practitioner names/specialties are publicly assignable (`domain.py`, `domain.py`). Consequently, a caller holding a returned participant object can change the stored session data. The supplied requirements do not say these details must be immutable, so this is an integrity consideration—not a requirement to redesign the domain.
+
+**Evidence to check:** the store’s returned object references and the public participant attributes above; clarify whether such in-session edits are intended.
+
+**Critical findings:** none.

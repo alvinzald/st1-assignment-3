@@ -3,6 +3,7 @@
 
 from datetime import datetime
 
+from smartcare.queries import select_appointments
 from smartcare.data_store import SmartCareDataStore
 from smartcare.domain import (
     Appointment,
@@ -10,7 +11,6 @@ from smartcare.domain import (
     Patient,
     Practitioner,
 )
-
 
 class PatientService:
     """Coordinate patient registration and lookup through the shared store."""
@@ -158,4 +158,17 @@ class AppointmentService:
         ValueError; a known practitioner with no matches returns an
         empty list.
         """
-        raise NotImplementedError('Stage 9: practitioner appointments')
+        practitioner = self.data_store.find_practitioner(practitioner_id)
+        if practitioner is None:
+            raise LookupError("Practitioner not found")
+
+        if status is not None and not isinstance(status, AppointmentStatus):
+            raise ValueError('Invalid appointment status')
+
+        appointments = self.data_store.list_appointments()
+        return select_appointments(
+            appointments,
+            practitioner.practitioner_id,
+            status,
+        )
+          ###('Stage 9: practitioner appointments')
