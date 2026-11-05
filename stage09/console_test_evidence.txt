@@ -137,7 +137,7 @@ Enter your choice: 7
 Appointment ID: A4
 Error: Appointment not found
 
-r choice: 5
+Enter choice: 5
 Appointment ID: A2
 Patient ID: P1
 Practitioner ID: D2 
@@ -145,4 +145,4 @@ Date/time (YYYY-MM-DD HH:MM): 2026-15-40 09:00
 Error: Invalid calendar date/time; use YYYY-MM-DD HH:MM
 
 <Final Automated Test>
-
+all 37 tests passed

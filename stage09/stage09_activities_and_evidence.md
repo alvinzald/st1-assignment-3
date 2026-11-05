@@ -5,6 +5,7 @@ Common UG and PG record. All Assignment 3 stage materials are provided from the 
 Group: <Wed 4:30-6:30>
 Members and responsibilities: 
 Noor Anwari (UG): [Stage 9 Implementation and testing]
+Alvin Zaldivar (PG), [alvinzald](https://github.com/alvinzald) - [Reviewer]
 Stage 8 integrated SHA: [1ababa89870941dfbee51f16b418e476ea8010bb] 
 command: [python -m pytest]
 working directory: [project/]
@@ -128,41 +129,54 @@ Responsibility check: explain how domain invariants, shared-store collections, s
 
 ## F. Required reflections
 
-1. Which integration concern was architectural rather than a filtering/sorting detail? <!-- response -->
-2. Which Copilot suggestion did you reject as over-engineering, and why? <!-- response -->
-3. How did you prove cancelled appointments remain retrievable and listable in the same session? <!-- response -->
+1. Which integration concern was architectural rather than a filtering/sorting detail? 
+<Keeping responsibilities separate. The console handles input/output, services manage operations, and queries filter and sort appointments.>
+2. Which Copilot suggestion did you reject as over-engineering, and why? 
+<I rejected making appointment objects immutable because it was not required and would add unnecessary changes.>
+3. How did you prove cancelled appointments remain retrievable and listable in the same session? 
+<I cancelled an appointment, retrieved it by ID, and listed it with CANCELLED status. I also verified this through automated tests.>
 
 ## G. Ten formative answers
 
-1. What makes select_appointments pure, and what side effect breaks purity? <!-- response -->
-2. Which explicit inputs are needed, and why avoid a global store? <!-- response -->
-3. How can a new list reuse Appointment objects safely? <!-- response -->
-4. Why use a named key, and what breaks equal-time ties? <!-- response -->
-5. How do default and explicit status filters differ? <!-- response -->
-6. How do empty, unknown practitioner and invalid filter cases differ? <!-- response -->
-7. Which console errors recover, and how is unchanged state checked? <!-- response -->
-8. What is data integrity for registered participants, conflicts and history? <!-- response -->
-9. What is Copilot's review role, and who verifies findings? <!-- response -->
-10. How do pure functions and OOP responsibilities work together? <!-- response -->
+1. What makes select_appointments pure, and what side effect breaks purity? 
+<It only uses its inputs and returns a new list without changing the original data. Modifying the original list would break purity.>
+2. Which explicit inputs are needed, and why avoid a global store? 
+<The inputs are appointments, practitioner ID and optional status. A global store would create hidden dependencies and make testing harder.>
+3. How can a new list reuse Appointment objects safely? 
+<The new list can contain the same Appointment objects because the query does not modify them.>
+4. Why use a named key, and what breaks equal-time ties?
+<A named key makes sorting clear and reusable. Appointment ID breaks ties when appointments have the same date and time>
+5. How do default and explicit status filters differ? 
+<The default None returns all statuses. An explicit status returns only matching appointments.>
+6. How do empty, unknown practitioner and invalid filter cases differ? 
+<An empty result returns []. An unknown practitioner raises LookupError, while an invalid status raises ValueError.>
+7. Which console errors recover, and how is unchanged state checked? 
+<Invalid menu choices, IDs, dates and booking conflicts are handled without stopping the menu. Tests check that failed operations do not change stored data>
+8. What is data integrity for registered participants, conflicts and history? 
+<Appointments must use registered patients and practitioners. Conflicting bookings are rejected, and cancelled appointments remain in history.>
+9. What is Copilot's review role, and who verifies findings? 
+<Copilot suggests possible issues and improvements. I (team member) review its suggestions and verify them using tests and evidence.>
+10. How do pure functions and OOP responsibilities work together? 
+<Pure functions handle filtering and sorting, while classes manage appointments, data storage and business rules. This keeps responsibilities separate.>
 
 ## H. Review, completion and common handover
 
-Issues and bounded branches: <!-- links -->
-PR/diff and another-member human reviewer: <!-- actual links/name -->
-Review responses and Copilot comparison: <!-- links -->
-Integrated common Stage 9 SHA: <!-- complete -->
-Full regression command, working directory, actual count/result and evidence: <!-- complete -->
-README run instructions and scope/limitations: <!-- link -->
-Unresolved issues and support/action: <!-- complete -->
+Issues and bounded branches: [No GitHub issues were created (#10). Stage 9 was developed on feature/stage9_queries and merged into main.]
+PR/diff and another-member human reviewer: [PR (https://github.com/alvinzald/st1-assignment-3/pull/10#issue-6216861692) was reviewed by Alvin (https://github.com/alvinzald/st1-assignment-3/pull/10#pullrequestreview-5781769108)  ]
+Review responses and Copilot comparison: [Human reviewer found no issues. Copilot suggestions were reviewed and addressed where needed.]
+Integrated common Stage 9 SHA: [(8c5c69866fb74155027829c8fa85822ca14c2b04)]
+Full regression command, working directory, actual count/result and evidence: [python -m pytest, project/ , 37 passed in 0.11s, Query tests and workflow tests.]
+README run instructions and scope/limitations: [[text](../project/README.md)]
+Unresolved issues and support/action: [None]
 UG common candidate / PG future branch plan: <!-- complete -->
 
-- [ ] Query contracts, purity, new lists and named-key ordering verified.
-- [ ] Service empty/unknown/invalid cases and cancellation history verified.
-- [ ] Every console command and invalid-input recovery demonstrated.
-- [ ] Query and workflow tests plus all previous tests pass; actual evidence linked.
-- [ ] Human design, Copilot critique, review and integration recorded honestly.
-- [ ] Reflections and ten formative responses completed.
-- [ ] README updated; earlier code/tests/records preserved.
-- [ ] Common SHA protected for UG Stage 12; PG Stage 10/11 work deferred until approved.
+- [X] Query contracts, purity, new lists and named-key ordering verified.
+- [X] Service empty/unknown/invalid cases and cancellation history verified.
+- [X] Every console command and invalid-input recovery demonstrated.
+- [X] Query and workflow tests plus all previous tests pass; actual evidence linked.
+- [X] Human design, Copilot critique, review and integration recorded honestly.
+- [X] Reflections and ten formative responses completed.
+- [X] README updated; earlier code/tests/records preserved.
+- [X] Common SHA protected for UG Stage 12; PG Stage 10/11 work deferred until approved.
 
 No persistence, rescheduling or assurance implementation is part of Stage 9. UG: 6→7→8→9→12. PG: 6→7→8→9→10→11→12. Mixed groups keep one repository and protect the common candidate.
