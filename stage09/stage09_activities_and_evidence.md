@@ -84,18 +84,19 @@ No matches return an empty list, unknown IDs raise LookupError, and invalid inpu
 
 | Requirement / test ID | Code location | Case and meaningful assertion | Actual result | Evidence link |
 |---|---|---|---|---|
-|QRY-01 |queries.py, test_queries.py |Checks that only appointments for the requested practitioner are returned. |Passed | |
-|QRY-02 |queries.py, test_queries.py |Checks status filtering, all statuses and no matching appointments.|Passed |
-|QRY-03 |queries.py, test_queries.py |Checks sorting by date/time and appointment ID without changing the original list.|Passed |
-|QRY-04 |queries.py, test_queries.py |Checks empty results, unknown practitioners and invalid inputs.|Passed | |
-|FP-01 |queries.py, test_queries.py |Checks that repeated queries give the same result without changing the original data.|Passed | |
-|FP-02 |queries.py, test_queries.py |Checks that a new list is returned for empty, sorted and unsorted inputs. |Passed | |
-|FP-03 |queries.py, test_queries.py |Checks that the named sorting key is used.|Passed | |
-|History|services.py, test_queries.py |Checks that cancelled appointments remain in the history.|Passed | |
+|QRY-01 |queries.py, test_queries.py |Checks that only appointments for the requested practitioner are returned. |Passed |(project/tests/test_queries.py) |
+|QRY-02 |queries.py, test_queries.py |Checks status filtering, all statuses and no matching appointments.|Passed |(project/tests/test_queries.py)|
+|QRY-03 |queries.py, test_queries.py |Checks sorting by date/time and appointment ID without changing the original list.|Passed |(project/tests/test_queries.py)|
+|QRY-04 |queries.py, test_queries.py |Checks empty results, unknown practitioners and invalid inputs.|Passed |(project/tests/test_queries.py) |
+|FP-01 |queries.py, test_queries.py |Checks that repeated queries give the same result without changing the original data.|Passed |(project/tests/test_queries.py) |
+|FP-02 |queries.py, test_queries.py |Checks that a new list is returned for empty, sorted and unsorted inputs. |Passed |(project/tests/test_queries.py) |
+|FP-03 |queries.py, test_queries.py |Checks that the named sorting key is used.|Passed |(project/tests/test_queries.py) |
+|History|services.py, test_queries.py |Checks that cancelled appointments remain in the history.|Passed |(project/tests/test_queries.py) |
 Include practitioner isolation, every enum status/default all, equal-time ID tie-break, named-key reuse, repeated calls, empty/already-sorted fresh lists, unchanged source order/fields, known-empty/unknown/invalid service cases and retained history.
 
 Purity explanation from code inspection, including absence of hidden state and I/O: 
 [The select_appointments() function only uses the inputs provided to it. It filters appointments by practitioner ID and status, then sorts them using appointment_sort_key(). It uses sorted() to return a new list without changing the original list. The function does not access the data store, use global variables, print anything or ask for user input.]
+
 What the tests do and do not establish: 
 [The tests check that appointments are filtered and sorted correctly, a new list is returned, and the original data is not changed. They also check invalid inputs, empty results and cancelled appointment history. However, passing these tests does not mean the whole system is working correctly. The tests only cover the cases we tested. The console menu and complete user workflow still need to be tested.]
 
@@ -114,13 +115,16 @@ Include registration/find, booking, conflict rejection, different-practitioner b
 Human design completed before AI: <Section A (A1–A5) of this evidence file.>
 Actual prompt/context supplied: <GitHub Copilot reviewed Stage 9 queries, services,
 console and tests using the required review prompt>
-Actual response: <!-- accessible reference -->
+Actual response: [GitHub Copilot review](stage09/copilot_review.txt)
 
 | AI finding | Code/test evidence | Severity | Accept/Modify/Reject and reason | Change or no change | Actual verification |
 |---|---|---|---|---|---|
-| | | | | | |
+|No automated console tests |console.py,test_workflows.py,console_test_evidence.txt |Important |Modify - Manual console testing is allowed by the assignment. However, the evidence should also include an impossible date |No new automated test required. Check and complete manual evidence if needed |UI-01 and UI-02 were manually tested, including malformed and impossible dates. The console displayed errors and continued running. All 37 automated tests passed. |
+|Query does not validate status directly |queries.py, services.py, test_queries.py |Optional |Reject - The service already validates the status before calling the query. |No change |Invalid status is rejected by the service and tested. |
+|Returned objects can be modified |data_store.py, domain.py |Optional |Reject - The requirements do not ask for immutable objects |No change |Existing tests passed. No domain changes were needed. |
 
-Responsibility check: explain how domain invariants, shared-store collections, service coordination, pure queries and console effects remain separate: <!-- response -->
+Responsibility check: explain how domain invariants, shared-store collections, service coordination, pure queries and console effects remain separate: 
+[The responsibilities are separated in SmartCare. The domain classes manage rules such as preventing repeated cancellation. The data store keeps patients, practitioners and appointments in shared collections. The services handle operations such as booking, cancellation and validation. The query functions filter and sort appointments without changing the original data. The console handles user input, displays results and shows error messages. This keeps each part focused on its own responsibility.]
 
 ## F. Required reflections
 
