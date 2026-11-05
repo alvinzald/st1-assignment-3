@@ -103,16 +103,17 @@ What the tests do and do not establish:
 
 | Scenario / acceptance ID | Reproducible inputs / artefact | Expected result | Observed result and state check | Evidence link |
 |---|---|---|---|---|
-| UI-01 full menu workflow | | | | |
-| UI-02 invalid-input recovery | | | | |
-| Automated service workflow | | | | |
+| UI-01 full menu workflow |Run python main.py --interactive. Register and find patient and practitioners, book appointments, cancel, retrieve, list and filter appointments, then exit. |The menu should complete all operations, reject booking conflicts, keep cancelled history and allow a new booking in a freed slot. |Registration, lookup, booking, cancellation, retrieval and filtering worked. Cancelled appointments remained in history, and a new booking in the freed slot succeeded. |[console testing evidence](stage09/console_test_evidence.txt)|
+| UI-02 invalid-input recovery |Enter invalid IDs, duplicate IDs, invalid date, repeated cancellation and menu choice 99. |nvalid inputs should show an error without crashing or changing existing records. The menu should continue working. |Tested invalid dates, duplicate IDs, repeated cancellation and unknown menu choice. Errors were displayed and the menu continued. An invalid booking ID was not saved |[console testing evidence](stage09/console_test_evidence.txt)|
+| Automated service workflow |tests/test_workflows.py and python -m pytest -q |Verify booking, conflict rejection, cancellation history, freed slots and practitioner filtering. |All 37 tests passed. Rejected bookings did not add records, cancelled appointments remained available, and filtering returned the correct appointments. |[workflow tests](project/tests/test_workflows.py) |
 
 Include registration/find, booking, conflict rejection, different-practitioner booking, cancellation, retrieval, listing/filtering, freed slot and exit; duplicate/unknown/blank IDs, malformed/impossible date, invalid status, unknown choice and repeated cancellation. Identify before/after state and subsequent successful action.
 
 ## E. GitHub Copilot review and human decisions
 
-Human design completed before AI: <!-- reference -->
-Actual prompt/context supplied: <!-- paste or accessible reference -->
+Human design completed before AI: <Section A (A1–A5) of this evidence file.>
+Actual prompt/context supplied: <GitHub Copilot reviewed Stage 9 queries, services,
+console and tests using the required review prompt>
 Actual response: <!-- accessible reference -->
 
 | AI finding | Code/test evidence | Severity | Accept/Modify/Reject and reason | Change or no change | Actual verification |

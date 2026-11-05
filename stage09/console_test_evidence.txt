@@ -1,0 +1,148 @@
+<Stage 9 - Manual Console Testing>
+
+UI-01: Full Menu Workflow
+Enter your choice: 1
+Patient ID: P1
+Patient name: Noor
+Patient P1 registered.
+
+Enter your choice: 2
+Patient ID: P1
+P1: Noor
+
+Enter your choice: 3
+Practitioner ID: DR1
+Practitioner name: Ali
+Specialty: General
+Practitioner DR1 registered.
+
+Enter your choice: 3
+Practitioner ID: D2
+Practitioner name: Fahad
+Specialty: Dental 
+Practitioner D2 registered.
+
+Enter your choice: 4
+Practitioner ID: D2
+D2: Fahad, Dental
+
+Enter your choice: 5
+Appointment ID: A1
+Patient ID: P1
+Practitioner ID: DR1
+Date/time (YYYY-MM-DD HH:MM): 2026-10-03 09:30
+Appointment booked.
+A1: P1 with DR1, 2026-10-03 09:30, scheduled
+
+Enter your choice: 5
+Appointment ID: A2
+Patient ID: P1
+Practitioner ID: DR1
+Date/time (YYYY-MM-DD HH:MM): 2026-10-03 09:30
+Error: Practitioner already has a SCHEDULED appointment at this time
+
+Enter your choice: 6
+Appointment ID: A1
+Appointment cancelled.
+A1: P1 with DR1, 2026-10-03 09:30, cancelled
+
+Enter your choice: 7
+Appointment ID: A1
+A1: P1 with DR1, 2026-10-03 09:30, cancelled
+
+Enter your choice: 8
+Practitioner ID: DR1
+Status (scheduled/cancelled/completed or blank for all): 
+A1: P1 with DR1, 2026-10-03 09:30, cancelled
+
+Enter your choice: 8
+Practitioner ID: DR1
+Status (scheduled/cancelled/completed or blank for all): scheduled
+No appointments found.
+
+Enter your choice: 5
+Appointment ID: A3
+Patient ID: P1
+Practitioner ID: DR1
+Date/time (YYYY-MM-DD HH:MM): 2026-10-03 09:30
+Appointment booked.
+A3: P1 with DR1, 2026-10-03 09:30, scheduled
+
+Enter your choice: 8
+Practitioner ID: DR1
+Status (scheduled/cancelled/completed or blank for all): 
+A1: P1 with DR1, 2026-10-03 09:30, cancelled
+A3: P1 with DR1, 2026-10-03 09:30, scheduled
+
+<UI-02: Invalid Input Recovery>
+
+Enter your choice: 99
+Invalid choice. Please try again.
+
+Enter your choice: 2
+Patient ID: 
+Error: Patient ID cannot be blank
+
+Enter your choice: 2
+Patient ID: P99
+Error: Patient not found
+
+Enter your choice: 1
+Patient ID: P1
+Patient name: Noor
+Error: Patient ID already exists
+
+
+--- SmartCare Menu ---
+1. Register patient
+2. Find patient
+3. Register practitioner
+4. Find practitioner
+5. Book appointment
+6. Cancel appointment
+7. Find appointment
+8. List practitioner appointments
+0. Exit
+Enter your choice: 5
+Appointment ID: A3
+Patient ID: P1
+Practitioner ID: D2
+Date/time (YYYY-MM-DD HH:MM): 2026/10/03  09:00
+Error: Use date/time format YYYY-MM-DD HH:MM
+
+--- SmartCare Menu ---
+1. Register patient
+2. Find patient
+3. Register practitioner
+4. Find practitioner
+5. Book appointment
+6. Cancel appointment
+7. Find appointment
+8. List practitioner appointments
+0. Exit
+Enter your choice: 7
+Appointment ID: A99
+Error: Appointment not found
+
+Enter your choice: 6
+Appointment ID: A1
+Error: Only SCHEDULED appointments may be cancelled
+
+Enter your choice: 8
+Practitioner ID: D1
+Status (scheduled/cancelled/completed or blank for all): pending
+Error: Invalid appointment status
+
+Enter your choice: 7
+Appointment ID: A4
+Error: Appointment not found
+
+r choice: 5
+Appointment ID: A2
+Patient ID: P1
+Practitioner ID: D2 
+Date/time (YYYY-MM-DD HH:MM): 2026-15-40 09:00
+Error: Invalid calendar date/time; use YYYY-MM-DD HH:MM
+
+<Final Automated Test>
+
