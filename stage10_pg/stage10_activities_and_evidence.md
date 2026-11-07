@@ -137,19 +137,24 @@ Why does increasing AI autonomy increase rather than decrease the importance of 
   - [Weakened existing tests]
   - [Changes to cancellation/history behaviour]
 - Baseline/recovery link: [299607323d5258b6c5a1c1af86cd94726abe7e16]
-- Evidence that human analysis preceded agent use: [response]
+- Evidence that human analysis preceded agent use: [9152380aca380a64a66431c00fb532694c856bda]
 
 ## D Agent plan and approval
 
-Actual plan-only prompt/context and response or confirmed equivalent artefacts: [links]
+Actual plan-only prompt/context and response or confirmed equivalent artefacts: [[prompt](evidence/copilot_plan_prompt.md)] [[response](https://github.com/alvinzald/st1-assignment-3/issues/12#issuecomment-6704660853)]
 
 | Plan step / action | Requirement link | Reason | Expected files | Accept / Modify / Reject | Conditions / evidence |
 |---|---|---|---|---|---|
-| [response] | [response] | [response] | [response] | [response] | [response] |
+| [Add a guarded domain reschedule operation] | [RES-01, RES-02, RES-06] | [Reuse datetime validation; only scheduled appointments can move, and failed attempts must preserve state and identities.] | [project\smartcare\domain.py] | [Accept] | [Only the appointment time should change and rejected operations must not mutate state.] |
+| [Add service-level rescheduling] | [RES-01, RES-03, RES-04, RES-06] | [Handle lookup and conflict checking before updating the appointment.] | [services.py] | [Accept] | [Reuse the existing conflict helper and exclude the target appointment.] |
+| [Add focused rescheduling tests] | [RES-01–06, RES-05-R2] | [Verify the requirements without weakening existing tests.] | [test_rescheduling.py] | [Accept] | [Cover positive, negative and boundary cases, then run focused and full test suites.] |
 
-Approved bounded scope / forbidden changes / verification plan: [response]
-Human plan approver and approval before edits: [actual evidence]
-Tool permissions and any expanded-scope requests / decision: [response]
+Approved bounded scope / forbidden changes / verification plan:
+  - [Proposed scope is limited to rescheduling methods and focused tests.]
+  - [No database changes, external dependencies, unrelated features or modifications to existing tests.]
+  - [Verification will include focused rescheduling tests, existing regression tests and the full suite.]
+Human plan approver and approval before edits: [[Approval](https://github.com/alvinzald/st1-assignment-3/issues/12#issuecomment-6704696945)]
+Tool permissions and any expanded-scope requests / decision: [Plan mode was used with "Allow All" disabled. Copilot reported no file edits or command execution during planning. No expanded-scope requests were reported.]
 
 ## E Production diff review
 
@@ -157,19 +162,33 @@ Actual proposal / branch diff / version reviewed: [links]
 
 | File | Change purpose and reason | Requirement / test link | Expected? | Architecture OK? | Decision | Notes / correction |
 |---|---|---|---|---|---|---|
-| [response] | [response] | [response] | [response] | [response] | [response] | [response] |
+| [domain.py] | [Added guarded rescheduling with datetime and status validation.] | [RES-01, RES-02, RES-06] | [Yes] | [Yes] | [Modify] | [Corrected the parameter name from date_time to new_date_time to match the required interface.] |
+| [services.py] | [Added appointment lookup, conflict checking and rescheduling coordination.] | [RES-01, RES-03, RES-04, RES-06] | [Yes] | [Yes] | [Modify] | [Corrected the parameter name to new_date_time. Existing conflict helper is reused.] |
 
 Every changed file inspected, including new/untracked files: [evidence]
-Unexpected changes, scope creep, secrets/dependencies/configuration, unrelated cleanup: [response or none with evidence]
+Unexpected changes, scope creep, secrets/dependencies/configuration, unrelated cleanup: [No unexpected changes or unrelated functionality identified in the reviewed code. No new dependencies or configuration changes observed.]
 
 ## F Separate test review
 
 | Test | Criterion | Actual assertion | Assertion meaningful / adequate? | Agent changed expected behaviour? | Human or agent authorship | Decision and reason |
 |---|---|---|---|---|---|---|
-| [response] | [response] | [response] | [response] | [response] | [response] | [response] |
+| [test_reschedule_preserves_identity_and_updates_session_views] | [RES-01, RES-02, RES-05-R2] | [Checks object identity, updated time, listing order and old-slot reuse.] | [Yes] | [No] | [Copilot] | [Accept: because it covers successful rescheduling and related requirements.] |
+| [test_reschedule_allows_same_time_no_op] | [RES-01, RES-04] | [Checks that the same appointment and time are retained.] | [Yes] | [No] | [Copilot] | [Accept: because it verifies the permitted no-op behaviour.] |
+| [test_reschedule_methods_accept_new_date_time_keyword] | [RES-01, RES-02] | [Checks that both methods accept new_date_time and update the same object.] | [Yes] | [No] | [Copilot, revised with human feedback] | [Accept: after it uses the required method signatures.] |
+| [test_reschedule_rejects_unknown_and_invalid_ids_without_mutation] | [RES-03] | [Checks the correct exceptions and unchanged stored records.] | [Yes] | [No] | [Copilot] | [Accept: since it covers invalid and unknown IDs.] |
+| [test_invalid_reschedule_time_does_not_mutate_state] | [RES-01, RES-06 datetime contract] | [Checks invalid datetime rejection and unchanged records at both domain and service levels.] | [Yes] | [No] | [Copilot] | [Accept: since it covers datetime validation at both levels.] |
+| [test_reschedule_rejects_scheduled_practitioner_conflict_without_mutation] | [RES-04] | [Checks conflict rejection and unchanged appointments.] | [Yes] | [No] | [Copilot] | [Accept: since it confirms conflicting appointments are rejected.] |
+| [test_reschedule_allows_other_practitioner_and_inactive_slot_occupants] | [RES-04] | [Checks that different practitioners and inactive appointments do not prevent rescheduling.] | [Yes] | [No] | [Copilot] | [Accept: because it confirms correct conflict handling.] |
+| [test_non_scheduled_appointment_cannot_be_rescheduled] | [RES-06] | [Checks rejection of `CANCELLED` and `COMPLETED` appointments without mutation.] | [Yes] | [No] | [Copilot, revised with human feedback] | [Modify: added missing boundary checks for RES-06 and verified all 50 tests pass.] |
 
-Comparison with original common tests / any proposed weakening: [response]
-Independent human checks and corrections: [response]
+Comparison with original common tests / any proposed weakening: [The original 37 tests still pass, and Copilot added 13 rescheduling test cases without replacing existing tests. No weakened assertions identified during the test review.]
+
+Independent human checks and corrections:
+- [Reviewed Copilot's tests and requested two improvements:]
+  - [Verifying the `new_date_time` keyword argument]
+  - [Checking same-time rejection for `CANCELLED` and `COMPLETED` appointments]
+- [Copilot implemented both changes.]
+- [Ran the focused, existing and full test suites, obtaining 13, 37 and 50 passing tests respectively.]
 
 ## G Actual verification
 
