@@ -213,13 +213,13 @@ Independent human checks and corrections:
 
 | Suite | Command / working directory | Code SHA | Actual count and result | Evidence |
 |---|---|---|---|---|
-| Focused PG | [`python -m pytest -q tests/test_rescheduling.py` / `project/`] | [83fa1e2] | [13 passed] | [[Comment 6705299493](https://github.com/alvinzald/st1-assignment-3/pull/13#issuecomment-6705299493)] |
-| Common independently | [`python -m pytest -q --ignore=tests/test_rescheduling.py` / `project/`] | [83fa1e2] | [13 passed] | [[Comment 6705299493](https://github.com/alvinzald/st1-assignment-3/pull/13#issuecomment-6705299493)] |
-| Full cumulative | [`python -m pytest -q` / `project/`] | [83fa1e2] | [13 passed] | [[Comment 6705299493](https://github.com/alvinzald/st1-assignment-3/pull/13#issuecomment-6705299493)] |
-| Integrated retest | [response] | [response] | [response] | [response] |
+| Focused PG | [`python -m pytest -q tests/test_rescheduling.py` / `project/`] | [`83fa1e2`] | [13 passed] | [[Comment 6705299493](https://github.com/alvinzald/st1-assignment-3/pull/13#issuecomment-6705299493)] |
+| Common independently | [`python -m pytest -q --ignore=tests/test_rescheduling.py` / `project/`] | [`83fa1e2`] | [13 passed] | [[Comment 6705299493](https://github.com/alvinzald/st1-assignment-3/pull/13#issuecomment-6705299493)] |
+| Full cumulative | [`python -m pytest -q` / `project/`] | [`83fa1e2`] | [13 passed] | [[Comment 6705299493](https://github.com/alvinzald/st1-assignment-3/pull/13#issuecomment-6705299493)] |
+| Integrated retest | [`python -m pytest -q` / `project/`] | [`8785aa5`] | [50 passed] | [Merged PR#13](https://github.com/alvinzald/st1-assignment-3/pull/13) |
 
 Failures / diagnosis / corrections and reruns / unresolved concerns:
-- [No test failures were observed.
+- [No test failures were observed.]
 - [Human review identified incorrect parameter names (`date_time` instead of `new_date_time`) and missing same-time rejection tests for inactive appointments.]
 - [Copilot corrected both issues]
 - [Human verification confirmed 13 focused, 37 existing and 50 cumulative tests passing.]
@@ -292,6 +292,13 @@ Optional UG help, acknowledged separately: [response or none]
 - [X] README PG note, actual integrated SHA and limitations recorded.
 
 Unresolved issues / owner / action: [response]
-Stage 11 handover references to extension, tests, dependencies and actual AI/review evidence: [response]
-Submitted SHA / explanation if later than tested code: [response]
+
+Stage 11 handover references to extension, tests, dependencies and actual AI/review evidence:
+- [Introduced rescheduling methods in `domain.py` and `services.py`]
+- [Added 13 new tests in test_rescheduling.py.]
+- [No new dependencies were introduced.]
+- [Implementation, Copilot decisions and verification evidence are available in PR #13 and the Stage 10 evidence record.]
+
+Submitted SHA / explanation if later than tested code: [`8785aa5ca9195677d47ec87461e1d5dec8279c8b`]
+
 Stage 11 materials are supplied from the beginning. Begin Stage 11 only after Stage 10 has been integrated, verified and recorded. UG follows the protected common code from Stage 9 to Stage 12.
