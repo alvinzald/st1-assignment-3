@@ -1,40 +1,58 @@
 # Software Technology 1 Assignment 3
 
 One group repository and one evolving SmartCare application.
-Baseline: Stage 6 foundation, 2026 revision 2. This starter deliberately leaves the three Stage 6 service tasks incomplete.
+
+SmartCare is a Python-based appointment management application developed incrementally from Stage 6 onwards, following the SmartCare A3 Requirements Baseline 2026, Revision 2. The application supports patient and practitioner registration, appointment booking, cancellation, lookup, filtering and sorting. Stage 10 introduces appointment rescheduling as a postgraduate extension.
 
 ## Group index
 
 - Group and tutorial: Wed 4:30 - 6:30 Group 6
 - Member names, GitHub usernames and UG/PG cohorts:
-  - Member 1: Noor Anwari, [nooranwari](https://github.com/nooranwari), UG 
-  - Member 2: Alvin Zaldivar, [alvinzald](https://github.com/alvinzald), PG 
+  - Member 1: Noor Anwari, [nooranwari](https://github.com/nooranwari), UG
+  - Member 2: Alvin Zaldivar, [alvinzald](https://github.com/alvinzald), PG
   - Member 3: Kaneez Fiza, [u3327559](https://github.com/u3327559), UG
 - Shared repository URL: [https://github.com/alvinzald/st1-assignment-3](https://github.com/alvinzald/st1-assignment-3)
-- Latest completed stage: Stage 7
-- Verified code SHA: [complete]
-- Test command, working directory and observed result: [complete]
-- Final submitted SHA, if different from tested code SHA: [complete; explain evidence-only changes]
+- Latest completed and integrated stage: Stage 10
+- Current development: Stage 10 PG rescheduling implemented and tested, pending independent review and integration ([PR #13](https://github.com/alvinzald/st1-assignment-3/pull/13)).
+- Verified common Stage 9 SHA: `299607323d5258b6c5a1c1af86cd94726abe7e16`
+- Stage 10 development commit: `83fa1e2`
+- Test commands, working directory and observed results:
+  - Working directory: `project/`
+  - Common Stage 9 tests: `python -m pytest -q --ignore=tests/test_rescheduling.py` — 37 passed
+  - Stage 10 rescheduling tests: `python -m pytest -q tests/test_rescheduling.py` — 13 passed
+  - Full cumulative suite: `python -m pytest -q` — 50 passed
+  - Stage 10 results were independently verified before committing. Integrated verification remains pending.
+- Final submitted SHA, if different from tested code SHA: Pending final release.
 
-Do not put student IDs, private peer ratings, credentials or personal contact details here.
+Do not include student IDs, private peer ratings, credentials or personal contact details in this README.
 
 ## Complete package and stage sequence
 
-All Assignment 3 ordinary materials are supplied at the beginning: the Overview, Git/GitHub Group Guide, Stage 6–12 handouts, this incomplete SmartCare starter, all seven blank activity/evidence records, and assessment instructions/forms. Stage numbers control the engineering sequence, not document availability.
+All Assignment 3 materials were provided at the beginning, including the Overview, Git/GitHub Group Guide, Stage 6–12 handouts, SmartCare starter, activity/evidence records and assessment instructions.
 
-Start with Stage 6. Complete each stage only after the previous applicable stage has been integrated, verified and recorded.
+Development follows the stage sequence, with each applicable stage integrated, verified and documented before progressing.
 
 UG: 6 → 7 → 8 → 9 → 12
 
 PG: 6 → 7 → 8 → 9 → 10 → 11 → 12
 
-Use ONE group repository and ONE evolving project/ throughout. The stage folders contain your response/evidence records; all templates are already present. Preserve previous code, tests, records and Git history. Never replace project/ with another starter or copy completed staff reference implementations: those are private staff material.
+Stages 6–9 established the common SmartCare application:
+- Stage 6: Implemented core service operations and established the team development workflow.
+- Stage 7: Added domain and service tests to verify functional requirements.
+- Stage 8: Diagnosed and corrected defects, added regression tests and performed bounded refactoring.
+- Stage 9: Implemented appointment queries, service listing and interactive console integration.
 
-Stages 10 and 11 are PG-only. UG skipping these stages is correct and complete. In an UG-only submission, retain the supplied PG-only templates unchanged as intentionally not applicable; do not fill them with fabricated N/A responses. Optional UG collaboration is voluntary and unassessed. Mixed groups protect the verified common Stage 9 SHA while PG extends the same project. Use only the teaching team's confirmed Copilot agent capability or approved equivalent route.
+Stages 10 and 11 are PG-only extensions:
+- Stage 10: Added guarded appointment rescheduling through `Appointment.reschedule()` and `AppointmentService.reschedule_appointment()`. The feature supports valid appointment moves, scheduling conflict prevention, identity preservation and current-session visibility. Human review resulted in corrections to method signatures and additional boundary tests. Implementation and testing are complete, with independent review and integration pending.
+- Stage 11: Responsible AI assurance of the completed application, including risk-based testing, verification of AI-assisted changes and documentation of findings. Not yet started.
 
-The Stage 8 preparation utility version 1.1 is a controlled teaching asset supplied or run by teaching staff when Stage 8 begins. Follow the instructions provided by your tutor. It is not included in the normal student package. If temporarily supplied for the handout commands, keep it in a sibling Stage_8_Assets/ folder outside the repository. Never include it in Git or the final submission. The Stage 7 checkpoint and Stage 8 technical activity are unchanged.
+Stage 12 covers the final release, including verification of the integrated application, documentation, source ZIP and submitted Git SHA.
 
-Complete the supplied Stage 12 record when you reach Stage 12. UG releases the common scope; PG releases the extended scope, protecting the common SHA where needed. Record exact tested/submitted SHAs and create one source ZIP as the handout directs, without duplicate application copies per stage.
+The group maintains one repository and one evolving `project/` directory throughout development. Previous tests, evidence records and Git history are retained.
+
+As this is a mixed UG/PG group, the verified Stage 9 common SHA is preserved so undergraduate members can complete Stage 12 independently of the postgraduate extensions. UG participation in Stages 10 and 11 is voluntary.
+
+GitHub Copilot is used as an AI development assistant, with significant suggestions, changes and decisions reviewed and documented by the responsible student. Stage 10 uses the teaching-team-approved Copilot environment in PyCharm.
 
 ## Application and evidence
 
@@ -47,7 +65,7 @@ Complete the supplied Stage 12 record when you reach Stage 12. UG releases the c
 - [Stage 11 PG activities and evidence](stage11_pg/stage11_activities_and_evidence.md)
 - [Stage 12 activities and evidence](stage12/stage12_activities_and_evidence.md)
 
-Git commands in the practical guide run from this root. Application commands run from project/:
+Git commands run from the repository root. Application commands run from `project/`:
 
 ```sh
 cd project
@@ -56,4 +74,14 @@ python -m pytest
 cd ..
 ```
 
-Use the approved environment described in the Git/GitHub group guide. The verified baseline is Python 3.13 with pytest 8.3.5. GitHub Copilot is the nominated assistant; verify significant output and record required decisions. Use synthetic data only. Use each supplied record only when you reach that stage in the applicable sequence.
+To run the Stage 10 rescheduling tests separately:
+
+```sh
+cd project
+python -m pytest -q tests/test_rescheduling.py
+cd ..
+```
+
+Development and testing have been performed using Python 3.14.7 and pytest 8.3.5. The application uses an in-memory data store, so appointment information is retained only during the current program session.
+
+Use synthetic data only. All significant AI-assisted changes must be reviewed, verified and documented in the corresponding stage evidence records.
