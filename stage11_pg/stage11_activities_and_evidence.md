@@ -259,7 +259,10 @@ Unresolved issues / owner / handover action:
 
 Tested code SHA / command / working directory / observed result: [Integrated SHA: `15b4833659840e7ce8f81fb461b0eefdcd98a4ab`. Command: `python -m pytest -q` from `project/`. Result: 52 passed in 0.08s.]
 
-Final submitted SHA / later evidence-only change explanation: [Tested integrated code SHA: `15b4833659840e7ce8f81fb461b0eefdcd98a4ab`. Final documentation-only commit SHA pending.]
+Final submitted SHA / later evidence-only change explanation:
+- Final submitted SHA: [`15b4833659840e7ce8f81fb461b0eefdcd98a4ab`]
+- Later evidence-only change and explanation: [`dfb75d6cc dbe7412c93b2eab69b8d855df28033d`. Finalised Stage 11 evidence without changing the application or tests.]
+
 Tested code SHA / command / working directory / observed result:
 - [Tested working tree: Stage 10 baseline `8785aa5ca9195677d47ec87461e1d5dec8279c8b` with local Stage 11 assurance changes.]
 - [`python -m pytest -q tests/test_assurance.py` — 2 passed.]
