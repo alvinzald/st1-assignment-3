@@ -2,7 +2,7 @@
 
 One group repository and one evolving SmartCare application.
 
-SmartCare is a Python-based appointment management application developed incrementally from Stage 6 onwards, following the SmartCare A3 Requirements Baseline 2026, Revision 2. The application supports patient and practitioner registration, appointment booking, cancellation, lookup, filtering and sorting. Stage 10 introduces appointment rescheduling as a postgraduate extension.
+SmartCare is a Python-based appointment management application developed incrementally from Stage 6 onwards, following the SmartCare A3 Requirements Baseline 2026, Revision 2. The application supports patient and practitioner registration, appointment booking, cancellation, lookup, filtering and sorting. Stage 10 added appointment rescheduling, and Stage 11 added responsible AI assurance and regression tests as postgraduate work.
 
 ## Group index
 
@@ -12,17 +12,19 @@ SmartCare is a Python-based appointment management application developed increme
   - Member 2: Alvin Zaldivar, [alvinzald](https://github.com/alvinzald), PG
   - Member 3: Kaneez Fiza, [u3327559](https://github.com/u3327559), UG
 - Shared repository URL: [https://github.com/alvinzald/st1-assignment-3](https://github.com/alvinzald/st1-assignment-3)
-- Latest completed and integrated stage: Stage 10
-- Current development: Stage 10 PG rescheduling implemented and tested, pending independent review and integration ([PR #13](https://github.com/alvinzald/st1-assignment-3/pull/13)).
+- Latest completed and integrated PG stage: Stage 11 ([PR #14](https://github.com/alvinzald/st1-assignment-3/pull/14)).
+- Next stage: Stage 12 final release. UG members may work from the protected Stage 9 common checkpoint.
 - Verified common Stage 9 SHA: `299607323d5258b6c5a1c1af86cd94726abe7e16`
-- Stage 10 development commit: `83fa1e2`
+- Integrated Stage 10 SHA: `8785aa5ca9195677d47ec87461e1d5dec8279c8b` ([PR #13](https://github.com/alvinzald/st1-assignment-3/pull/13))
+- Integrated and tested Stage 11 SHA: `15b4833659840e7ce8f81fb461b0eefdcd98a4ab` ([PR #14](https://github.com/alvinzald/st1-assignment-3/pull/14))
 - Test commands, working directory and observed results:
   - Working directory: `project/`
-  - Common Stage 9 tests: `python -m pytest -q --ignore=tests/test_rescheduling.py` — 37 passed
+  - Protected common tests: `python -m pytest -q --ignore=tests/test_assurance.py --ignore=tests/test_rescheduling.py` — 37 passed
   - Stage 10 rescheduling tests: `python -m pytest -q tests/test_rescheduling.py` — 13 passed
-  - Full cumulative suite: `python -m pytest -q` — 50 passed
-  - Stage 10 results were independently verified before committing. Integrated verification remains pending.
-- Final submitted SHA, if different from tested code SHA: Pending final release.
+  - Stage 11 assurance tests: `python -m pytest -q tests/test_assurance.py` — 2 passed
+  - Full integrated suite: `python -m pytest -q` — 52 passed
+- Review limitation: Stage 10 and Stage 11 were self-reviewed and tested by the responsible PG student. Independent review by another person was not obtained; this is recorded in the stage evidence.
+- Final submitted SHA: Obtain the latest `main` SHA at Stage 12 release using `git rev-parse HEAD`. Later documentation-only commits are separate from the tested Stage 11 code SHA above.
 
 Do not include student IDs, private peer ratings, credentials or personal contact details in this README.
 
@@ -43,8 +45,8 @@ Stages 6–9 established the common SmartCare application:
 - Stage 9: Implemented appointment queries, service listing and interactive console integration.
 
 Stages 10 and 11 are PG-only extensions:
-- Stage 10: Added guarded appointment rescheduling through `Appointment.reschedule()` and `AppointmentService.reschedule_appointment()`. The feature supports valid appointment moves, scheduling conflict prevention, identity preservation and current-session visibility. Human review resulted in corrections to method signatures and additional boundary tests. Implementation and testing are complete, with independent review and integration pending.
-- Stage 11: Responsible AI assurance of the completed application, including risk-based testing, verification of AI-assisted changes and documentation of findings. Not yet started.
+- Stage 10: Added guarded appointment rescheduling through `Appointment.reschedule()` and `AppointmentService.reschedule_appointment()`. The feature supports valid appointment moves, scheduling conflict prevention, identity preservation and current-session visibility. Human review resulted in corrected method signatures and additional boundary tests. The changes were merged and passed integrated testing; independent approval was not obtained.
+- Stage 11: Reviewed the application and Copilot-assisted work for correctness, privacy, dependencies, architecture and test quality. Added two assurance tests covering rescheduling followed by cancellation and patient lookup isolation across data stores. No production defect was confirmed and no production code changes were required. The changes were merged and all 52 tests passed on the integrated code. Independent approval was not obtained.
 
 Stage 12 covers the final release, including verification of the integrated application, documentation, source ZIP and submitted Git SHA.
 
@@ -52,7 +54,7 @@ The group maintains one repository and one evolving `project/` directory through
 
 As this is a mixed UG/PG group, the verified Stage 9 common SHA is preserved so undergraduate members can complete Stage 12 independently of the postgraduate extensions. UG participation in Stages 10 and 11 is voluntary.
 
-GitHub Copilot is used as an AI development assistant, with significant suggestions, changes and decisions reviewed and documented by the responsible student. Stage 10 uses the teaching-team-approved Copilot environment in PyCharm.
+GitHub Copilot was used in PyCharm for Stage 10 implementation assistance and a read-only Stage 11 assurance audit. Significant AI suggestions, human decisions and limitations are documented in the corresponding stage evidence records.
 
 ## Application and evidence
 
@@ -74,11 +76,12 @@ python -m pytest
 cd ..
 ```
 
-To run the Stage 10 rescheduling tests separately:
+To run the PG extension and assurance tests separately:
 
 ```sh
 cd project
 python -m pytest -q tests/test_rescheduling.py
+python -m pytest -q tests/test_assurance.py
 cd ..
 ```
 
