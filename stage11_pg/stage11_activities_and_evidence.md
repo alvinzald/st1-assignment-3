@@ -116,7 +116,7 @@ For each of at least TWO new/materially strengthened tests, explain the earlier 
 | Previous PG independently | [`python -m pytest -q --ignore=tests/test_assurance.py` / `project/`] | [Stage 10 base `8785aa5` + local Stage 11 changes] | [50 passed] | [Local terminal output; repository evidence link pending.] |
 | Common independently | [`python -m pytest -q --ignore=tests/test_assurance.py --ignore=tests/test_rescheduling.py` / `project/`] | [Stage 10 base `8785aa5` + local Stage 11 changes] | [37 passed] | [Local terminal output; repository evidence link pending.] |
 | Full PG cumulative | [`python -m pytest -q` / `project/`] | [Stage 10 base `8785aa5` + local Stage 11 changes] | [52 passed] | [Local terminal output; repository evidence link pending.] |
-| Integrated retest | [Pending merge.] | [Pending integrated SHA.] | [Pending.] | [Pending.] |
+| Integrated retest | [`python -m pytest -q` / `project/`] | [`15b4833`] | [52 passed in 0.08s] | [[Merged PR #14](https://github.com/alvinzald/st1-assignment-3/pull/14)] |
 
 Confirmed defect / minimal correction / before-after evidence, or justified no-change decision: [No production defect was identified by the two new assurance tests. Both passed, so no production code changes were necessary. The new tests provide additional coverage for combined appointment operations and session isolation.]
 
@@ -191,10 +191,8 @@ Policy questions or unresolved provenance / responsible contact: [No additional 
 
 ## I Independent review and final audit statement
 
+Human reviewer / PR or diff link / feedback: [Alvin Zaldivar. Reviewed the Stage 11 assurance changes and accepted the implementation based on the code inspection and 52 passing tests. [Review comment](https://github.com/alvinzald/st1-assignment-3/pull/14#issuecomment-6707719669).]
 
-## I Independent review and final audit statement
-
-Human reviewer / PR or diff link / feedback: [Alvin Zaldivar. Reviewed Copilot audit findings and assurance tests. No production defect found. Changes are recorded in [PR #14](https://github.com/alvinzald/st1-assignment-3/pull/14).]
 Corrections and recheck / approval before integration: [No production corrections were necessary. Two assurance tests were added and all 52 tests passed.]
 
 Overall decision: [Not yet acceptable for final sign-off. The current technical results support the implementation within the teaching application's scope, but independent review and integration verification are still outstanding.]
@@ -215,7 +213,9 @@ Residual limitations and conditions of acceptance: [SmartCare is a session-only 
 
 Accountable reviewer and PG member sign-off:  [Alvin Zaldivar — responsible for the assurance review, test verification and final technical decisions. Self-review completed; independent reviewer sign-off not obtained.]
 
-Integrated PG SHA / protected common SHA: [Stage 11 integration pending. Protected Stage 9 common SHA: `299607323d5258b6c5a1c1af86cd94726abe7e16`. Stage 10 baseline SHA: `8785aa5ca9195677d47ec87461e1d5dec8279c8b`.]
+Integrated PG SHA / protected common SHA: 
+- Integrated PG SHA: [`15b4833659840e7ce8f81fb461b0eefdcd98a4ab`]
+- Protected common SHA: [`299607323d5258b6c5a1c1af86cd94726abe7e16`]
 
 ## J Reflections
 
@@ -253,10 +253,13 @@ Integrated PG SHA / protected common SHA: [Stage 11 integration pending. Protect
 - [x] Accountable PG contribution/sign-off and protected UG pathway retained.
 
 Unresolved issues / owner / handover action:
-- [Independent Stage 11 review has not been obtained. Alvin Zaldivar completed a self-review and will record this limitation in the final submission.]
-- [No production defect was confirmed. Console privacy remains a conditional limitation when terminal output is shared.]
-- [PR #14 is awaiting integration and the final integrated test run.]
+- [Alvin Zaldivar completed the self-review and integrated Stage 11 through PR #14. Independent review by another person was not obtained.]
+- [No production defect confirmed. The integrated application passed all 52 tests.]
+- [The remaining privacy and assurance limitations are documented in Sections H and I.]
 
+Tested code SHA / command / working directory / observed result: [Integrated SHA: `15b4833659840e7ce8f81fb461b0eefdcd98a4ab`. Command: `python -m pytest -q` from `project/`. Result: 52 passed in 0.08s.]
+
+Final submitted SHA / later evidence-only change explanation: [Tested integrated code SHA: `15b4833659840e7ce8f81fb461b0eefdcd98a4ab`. Final documentation-only commit SHA pending.]
 Tested code SHA / command / working directory / observed result:
 - [Tested working tree: Stage 10 baseline `8785aa5ca9195677d47ec87461e1d5dec8279c8b` with local Stage 11 assurance changes.]
 - [`python -m pytest -q tests/test_assurance.py` — 2 passed.]
