@@ -6,78 +6,137 @@ All Assignment 3 stage materials are provided from the beginning. Complete this 
 
 This is a blank student record. Use actual accessible links and concise evidence; do not invent an agent session, test result or approval. Retain this record's headings when linking equivalent issue/PR evidence.
 
-Group/tutorial: [response]
-Assessed PG members and roles: [response]
-Optional UG contributors: [response or none]
+Group/tutorial: [Wed 4:30-6:30]
+Assessed PG members and roles: [Alvin Zaldivar]
+Optional UG contributors: [none]
 
 ## A Access baseline and recovery
 
-- Confirmed GitHub Copilot feature/mode, version/environment and teaching-team approval reference: [response]
+- Confirmed GitHub Copilot feature/mode, version/environment and teaching-team approval reference: [GitHub Copilot coding assistant/Auto mode (model selected dynamically), version 1.0.103/Windows, [Approval Reference at 35:00](https://uclearn.canberra.edu.au/courses/20399/external_tools/197)]
 - Actual account access and tool permissions check: [response]
 - Live route or convenor-confirmed equivalent staged interaction: [response]
 - Access limitation and tutor resolution if applicable: [response]
-- Protected Stage 9 common SHA / recoverable reference: [response]
-- Common baseline command / project working directory / actual result: [response]
-- Clean branch and preparer / recovery baseline: [response]
+- Protected Stage 9 common SHA / recoverable reference: [299607323d5258b6c5a1c1af86cd94726abe7e16]
+- Common baseline command / project working directory / actual result: [python -m pytest / st1-assignment-3/project / All 37 tests passed with no failures]
+- Clean branch and preparer / recovery baseline: [Alvin Zaldivar]
 - Evidence-only later SHA if different / explanation: [response]
 
 ## B Tutorial activities
 
 ### B1 Rewrite the vague task
 
-“Improve SmartCare appointment scheduling.” Write your bounded goal, requirements, exclusions, constraints, acceptance criteria and Definition of Done: [response]
-Predicted changed files and human test intentions: [response]
+“Improve SmartCare appointment scheduling.” Write your bounded goal, requirements, exclusions, constraints, acceptance criteria and Definition of Done:
+- [Add appointment rescheduling feature which which will let an existing `SCHEDULED` appointment to move to another valid date and time]
+- [The feature must preserve the original appointment object, ID, patient and practitioner. It must reject invalid IDs, invalid dates and times, conflicting practitioner schedules and attempts to reschedule `CANCELLED` or `COMPLETED` appointments. Failed attempts must leave existing records unchanged.]
+- [The implementation should follow the current domain and service structure, reuse the existing conflict-checking logic and datetime validation, and keep the changes limited to rescheduling. Database redesign, notifications, external libraries, unrelated features and changes to cancellation behaviour are excluded.]
+- [The feature is complete when successful and rejected rescheduling scenarios behave as required, lookup and listing reflect the updated time, and all new and existing tests pass. The changes must also pass human code review before integration.]
+Predicted changed files and human test intentions:
+- [[domain.py](../project/smartcare/domain.py) — Add the rescheduling method and its validation.]
+- [[services.py](..project/smartcare/services.py) — Handle appointment lookup, conflict checks and rescheduling.]
+- [[test_rescheduling.py](..project/tests/test_rescheduling.py) — Add positive, negative and boundary tests.]
+- [[README.md](../README.md) — Document the PG rescheduling feature.]
 
 ### B2 Judge every proposed plan step
 
 | Proposed step | Accept / Modify / Reject | Requirement evidence and reason |
 |---|---|---|
-| Redesign database schema | [response] | [response] |
-| Add notifications | [response] | [response] |
-| Introduce calendar library | [response] | [response] |
-| Modify Patient | [response] | [response] |
-| Add rescheduling | [response] | [response] |
-| Rewrite all tests | [response] | [response] |
+| Redesign database schema | [Reject] | [RES-05-R2 / SmartCare uses an in-memory data store, a database redesign is unnecessary and outside the scope of Stage 10.] |
+| Add notifications | [Reject] | [RES-01~06 / Notifications are not included in requirements, adding them would introduce unrelated functionality and increase the scope of the implementation.] |
+| Introduce calendar library | [Reject] | [An external calendar library is unnecessary and explicitly excluded under Section 3's out-of-scope requirements.] |
+| Modify Patient | [Reject] | [RES-02/ Existing patient and practitioner identities to remain unchanged. Rescheduling should not require modifications to the Patient class.] |
+| Add rescheduling | [Accept] | [RES-01 / Requires rescheduling.] |
+| Rewrite all tests | [Reject] | [RES-01~06 / Meaningful tests are required to verify rescheduling behaviour, but don't require rewriting existing tests. Previous tests to be preserved so regressions can still be detected. New tests should be added in [test_rescheduling.py](..project/tests/test_rescheduling.py) instead.] |
 
 ### B3 Six proposed changes
 
 | File or action | Expected? | Review concern and evidence needed |
 |---|---|---|
-| Appointment in project/smartcare/domain.py | [response] | [response] |
-| project/smartcare/services.py | [response] | [response] |
-| Proposed sqlite_repository.py / schema change | [response] | [response] |
-| Patient fields in project/smartcare/domain.py | [response] | [response] |
-| requirements-dev.txt adds calendar package | [response] | [response] |
-| Existing appointment assertions weakened | [response] | [response] |
+| Appointment in project/smartcare/domain.py | [Yes] | [RES-01 / Check that rescheduling validates the appointment state and new datetime.] |
+| project/smartcare/services.py | [Yes] | [RES-04 / Verify if conflicts are checked before changing the appointment time.] |
+| Proposed sqlite_repository.py / schema change | [No] | [RES-05-R2 / Only current-session visibility is required. Check that no unnecessary persistence is introduced.] |
+| Patient fields in project/smartcare/domain.py | [No] | [RES-02 / Patient identity must remain unchanged. Check that no unrelated fields are modified.] |
+| requirements-dev.txt adds calendar package | [No] | [RES-01 / Existing datetime handling should be sufficient. Check that no unnecessary dependency is added.] |
+| Existing appointment assertions weakened | [No] | [RES-01–06 / Check that tests still verify the required behaviour rather than simply passing.] |
 
 ### B4 Approval gate
 
 Agent says “All tests pass.” Give at least SIX distinct checks before approval.
-1. [response]
-2. [response]
-3. [response]
-4. [response]
-5. [response]
-6. [response]
-Additional checks if useful: [response]
+1. [Verify that scheduled appointments can be moved to a valid, available time (RES-01).]
+2. [Confirm that the original appointment object, ID and participants remain unchanged (RES-02).]
+3. [Check that invalid and unknown appointment IDs are rejected with the correct errors (RES-03).]
+4. [Verify that scheduling conflicts are rejected while allowing different practitioners at the same time (RES-04).]
+5. [Confirm that lookup and listing reflect the updated appointment time (RES-05-R2).]
+6. [Verify that CANCELLED and COMPLETED appointments cannot be rescheduled (RES-06).]
+
+Additional checks if useful: 
+- [Review the code and check code diff for unexpected changes.]
+- [Run the focused and existing test suites.]
+- [Confirm that failed operations leave records unchanged.]
 
 ### B5 Exit question
 
-Why does increasing AI autonomy increase rather than decrease the importance of software engineering discipline? [response]
+Why does increasing AI autonomy increase rather than decrease the importance of software engineering discipline? [It can make more changes with less human oversight which increases the risk of errors. Software engineering practices help ensure changes meet requirements, properly reviewed, and tested before approval.]
 
 ## C Human task specification before AI
 
-- Goal: [response]
-- Requirements RES-01–06 with RES-05-R2: [response]
-- Out of scope: [response]
-- Architecture constraints: [response]
-- Acceptance criteria: [response]
-- Definition of Done: [response]
-- Issue / PG owner: [response]
-- Human expected positive, negative and boundary tests: [response]
-- Allowed files: [response]
-- Forbidden/unnecessary files and changes: [response]
-- Baseline/recovery link: [response]
+- Goal: [Implement appointment rescheduling so that an existing scheduled appointment can be moved to another valid, available time.]
+- Requirements RES-01–06 with RES-05-R2:
+  - [RES-01: Reschedule a known `SCHEDULED` appointment to a valid free time]
+  - [RES-02: Keep the existing appointment object, ID, patient and practitioner identities; only time changes. The service returns that same object.]
+  - [RES-03: A valid unknown appointment ID raises `LookupError`. Invalid/blank IDs raise ValueError under the existing ID contract.]
+  - [RES-04: Reject another SCHEDULED appointment for the same practitioner at the exact new datetime with ValueError. Exclude the target appointment itself; another practitioner is allowed.]
+  - [RES-05-R2: Updated time is visible through subsequent lookup and listing in this session, with current sorting. This replaces the original persistence requirement.]
+  - [RES-06: CANCELLED and COMPLETED targets raise ValueError without mutation, even for a same-time request.]
+- Out of scope:
+  - [Database redesign]
+  - [Notifications]
+  - [External calendar libraries]
+  - [Authentication changes]
+  - [Recurring appointments]
+  - [Unrelated features]
+- Architecture constraints:
+  - [Follow the existing domain and service structure]
+  - [Reuse datetime validation and the `has_practitioner_conflict` helper]
+  - [Keep the in-memory data store and existing behaviour unchanged]
+- Acceptance criteria:
+  - [x] [RES-01–06 with RES-05-R2 must be satisfied]
+  - [x] [Successful rescheduling]
+  - [x] [Identity preservation]
+  - [x] [Correct error handling]
+  - [x] [Conflict rejection]
+  - [x] [Current-session visibility]
+  - [x] [Unchanged state after failed operations]
+- Definition of Done:
+  - [x] [Rescheduling works as required]
+  - [x] [New and existing tests pass]
+  - [x] [All changes remain within scopes]
+  - [x] [The implementation has been reviewed and approveds]
+- Issue / PG owner: [Implement Guarded Appointment Rescheduling / Alvin Zaldivar]
+- Human expected positive, negative and boundary tests:
+  - [Valid rescheduling: Confirm that a `SCHEDULED` appointment can move to an available date and time]
+  - [Preserved identities: Verify that the appointment object, ID, patient and practitioner remain unchanged]
+  - [Invalid or unknown IDs: Check that blank or invalid IDs raise `ValueError` and unknown valid IDs raise `LookupError`]
+  - [Scheduling conflicts: Verify that another SCHEDULED appointment for the same practitioner and time is rejected]
+  - [Different practitioners: Confirm that appointments for different practitioners can share the same time]
+  - [Invalid appointment states: Check that `CANCELLED` and `COMPLETED` appointments cannot be rescheduled]
+  - [Invalid dates and times: Verify that incorrect types, timezone-aware dates and times and nonzero seconds or microseconds are rejected]
+  - [Same-time requests: Confirm that rescheduling a `SCHEDULED` appointment to its existing time is allowed without changes]
+  - [Old-slot reuse: Verify that another appointment can use the original time after a successful move]
+  - [State preservation: Confirm that rejected rescheduling attempts leave appointment details and stored records unchanged]
+  - [Lookup and listing: Verify that the new appointment time appears in subsequent lookup and correctly sorted listing results]
+- Allowed files:
+  - [[domain.py](../project/smartcare/domain.py)]
+  - [[services.py](..project/smartcare/services.py)]
+  - [[test_rescheduling.py](..project/tests/test_rescheduling.py) ]
+  - [[README.md](../README.md)]
+  - [[stage10_activities_and_evidence.md](stage10_activities_and_evidence.md)]
+- Forbidden/unnecessary files and changes:
+  - [Database and schema changes]
+  - [New external dependencies]
+  - [Unrelated participant modifications]
+  - [Weakened existing tests]
+  - [Changes to cancellation/history behaviour]
+- Baseline/recovery link: [299607323d5258b6c5a1c1af86cd94726abe7e16]
 - Evidence that human analysis preceded agent use: [response]
 
 ## D Agent plan and approval
