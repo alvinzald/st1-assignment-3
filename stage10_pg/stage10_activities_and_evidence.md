@@ -165,8 +165,14 @@ Actual proposal / branch diff / version reviewed: [links]
 | [domain.py] | [Added guarded rescheduling with datetime and status validation.] | [RES-01, RES-02, RES-06] | [Yes] | [Yes] | [Modify] | [Corrected the parameter name from date_time to new_date_time to match the required interface.] |
 | [services.py] | [Added appointment lookup, conflict checking and rescheduling coordination.] | [RES-01, RES-03, RES-04, RES-06] | [Yes] | [Yes] | [Modify] | [Corrected the parameter name to new_date_time. Existing conflict helper is reused.] |
 
-Every changed file inspected, including new/untracked files: [evidence]
-Unexpected changes, scope creep, secrets/dependencies/configuration, unrelated cleanup: [No unexpected changes or unrelated functionality identified in the reviewed code. No new dependencies or configuration changes observed.]
+Every changed file inspected, including new/untracked files: [PR#13](https://github.com/alvinzald/st1-assignment-3/pull/13)
+  - [domain.py](../project/smartcare/domain.py)
+  - [services.py](../project/smartcare/services.py)
+  - [test_rescheduling.py](../project/tests/test_rescheduling.py)
+  - [copilot_plan_prompt.md](evidence/copilot_plan_prompt.md)
+  - [stage10_activities_and_evidence.md](stage10_activities_and_evidence.md)
+
+Unexpected changes, scope creep, secrets/dependencies/configuration, unrelated cleanup: [No unrelated functionality, new dependencies, configuration changes or secrets identified. The changes remain within the approved Stage 10 implementation and evidence scope.]
 
 ## F Separate test review
 
@@ -194,77 +200,96 @@ Independent human checks and corrections:
 
 | Requirement / acceptance scenario | Test or demonstration | Meaningful expected result | Actual result | Evidence / version |
 |---|---|---|---|---|
-| RES-01 / AC-RES-01 successful move | [response] | [response] | [response] | [response] |
-| RES-02 same object and participant identities | [response] | [response] | [response] | [response] |
-| RES-03 / AC-RES-02 unknown and invalid IDs | [response] | [response] | [response] | [response] |
-| RES-04 / AC-RES-03 conflicting practitioner | [response] | [response] | [response] | [response] |
-| AC-RES-04 different practitioner allowed | [response] | [response] | [response] | [response] |
-| RES-06 / AC-RES-05 cancelled and completed | [response] | [response] | [response] | [response] |
-| RES-05-R2 / AC-RES-06-R2 lookup and listing order | [response] | [response] | [response] | [response] |
-| Self-exclusion and same-time no-op | [response] | [response] | [response] | [response] |
-| Invalid datetime and failed-state snapshots | [response] | [response] | [response] | [response] |
-| Successful old-slot reuse | [response] | [response] | [response] | [response] |
+| RES-01 / AC-RES-01 successful move | [`test_reschedule_preserves_identity_and_updates_session_views`] | [A scheduled appointment moves to an available time.] | [Passed] | [[PR #13](https://github.com/alvinzald/st1-assignment-3/pull/13)] |
+| RES-02 same object and participant identities | [`test_reschedule_preserves_identity_and_updates_session_views`] | [Original appointment object, ID, patient and practitioner are preserved.] | [Passed] | [[PR #13](https://github.com/alvinzald/st1-assignment-3/pull/13)] |
+| RES-03 / AC-RES-02 unknown and invalid IDs | [`test_reschedule_rejects_unknown_and_invalid_ids_without_mutation`] | [Unknown IDs raise `LookupError`; invalid IDs raise `ValueError` without mutation.] | [Passed] | [[PR #13](https://github.com/alvinzald/st1-assignment-3/pull/13)] |
+| RES-04 / AC-RES-03 conflicting practitioner | [`test_reschedule_rejects_scheduled_practitioner_conflict_without_mutation`] | [Conflicting scheduled appointments are rejected without changing existing records.] | [Passed] | [[PR #13](https://github.com/alvinzald/st1-assignment-3/pull/13)] |
+| AC-RES-04 different practitioner allowed | [`test_reschedule_allows_other_practitioner_and_inactive_slot_occupants`] | [Different practitioners may have appointments at the same time.] | [Passed] | [[PR #13](https://github.com/alvinzald/st1-assignment-3/pull/13)] |
+| RES-06 / AC-RES-05 cancelled and completed | [`test_non_scheduled_appointment_cannot_be_rescheduled`] | [`CANCELLED` and `COMPLETED` appointments reject rescheduling, including same-time requests.] | [Passed] | [[PR #13](https://github.com/alvinzald/st1-assignment-3/pull/13)] |
+| RES-05-R2 / AC-RES-06-R2 lookup and listing order | [`test_reschedule_preserves_identity_and_updates_session_views`] | [Lookup returns the updated appointment and listing reflects the correct chronological order.] | [Passed] | [[PR #13](https://github.com/alvinzald/st1-assignment-3/pull/13)] |
+| Self-exclusion and same-time no-op | [`test_reschedule_allows_same_time_no_op`] | [An appointment does not conflict with itself, and its current time remains valid.] | [Passed] | [[PR #13](https://github.com/alvinzald/st1-assignment-3/pull/13)] |
+| Invalid datetime and failed-state snapshots | [`test_invalid_reschedule_time_does_not_mutate_state`] | [Invalid datetimes raise `ValueError` and leave stored records unchanged.] | [Passed] | [[PR #13](https://github.com/alvinzald/st1-assignment-3/pull/13)] |
+| Successful old-slot reuse | [`test_reschedule_preserves_identity_and_updates_session_views`] | [Another appointment can be booked into the original slot after rescheduling.] | [Passed] | [[PR #13](https://github.com/alvinzald/st1-assignment-3/pull/13)] |
 
 | Suite | Command / working directory | Code SHA | Actual count and result | Evidence |
 |---|---|---|---|---|
-| Focused PG | [response] | [response] | [response] | [response] |
-| Common independently | [response] | [response] | [response] | [response] |
-| Full cumulative | [response] | [response] | [response] | [response] |
+| Focused PG | [`python -m pytest -q tests/test_rescheduling.py` / `project/`] | [83fa1e2] | [13 passed] | [[Comment 6705299493](https://github.com/alvinzald/st1-assignment-3/pull/13#issuecomment-6705299493)] |
+| Common independently | [`python -m pytest -q --ignore=tests/test_rescheduling.py` / `project/`] | [83fa1e2] | [13 passed] | [[Comment 6705299493](https://github.com/alvinzald/st1-assignment-3/pull/13#issuecomment-6705299493)] |
+| Full cumulative | [`python -m pytest -q` / `project/`] | [83fa1e2] | [13 passed] | [[Comment 6705299493](https://github.com/alvinzald/st1-assignment-3/pull/13#issuecomment-6705299493)] |
 | Integrated retest | [response] | [response] | [response] | [response] |
 
-Failures / diagnosis / corrections and reruns / unresolved concerns: [response]
+Failures / diagnosis / corrections and reruns / unresolved concerns:
+- [No test failures were observed.
+- [Human review identified incorrect parameter names (`date_time` instead of `new_date_time`) and missing same-time rejection tests for inactive appointments.]
+- [Copilot corrected both issues]
+- [Human verification confirmed 13 focused, 37 existing and 50 cumulative tests passing.]
 
 ## H Decisions corrections and independent review
 
 | Significant agent action | Human review and evidence | Accept / Modify / Reject and reason | Manual correction or recovery | Recheck evidence |
 |---|---|---|---|---|
-| [response] | [response] | [response] | [response] | [response] |
+| [Added rescheduling methods in domain.py and services.py.] | [[PR#13](https://github.com/alvinzald/st1-assignment-3/pull/13)] | [Modify: Parameter names did not match the requirements.] | [Asked Copilot to rename `date_time` to `new_date_time` in both methods.] | [[Comment 6705299493](https://github.com/alvinzald/st1-assignment-3/pull/13#issuecomment-6705299493)] |
+| [Generated rescheduling tests in test_rescheduling.py.] | [[PR#13](https://github.com/alvinzald/st1-assignment-3/pull/13)] | [Modify: Same-time rejection checks for inactive appointments were missing.] | [Asked Copilot to add boundary checks for `CANCELLED` and `COMPLETED` appointments.] | [[Comment 6705299493](https://github.com/alvinzald/st1-assignment-3/pull/13#issuecomment-6705299493)] |
 
-Final proposal decision: [Accepted / Accepted after modification / Rejected]
-Evidence supporting decision: [response]
-If rejected, how the required feature was subsequently completed and verified: [response or not applicable]
-Saved proposal and targeted recovery details if needed: [response or not applicable]
-Human explanation of every changed method and limitations: [response]
-Another PG / willing UG / tutor reviewer, actual PR/diff review and feedback: [links]
+Final proposal decision: [Accepted after modification]
+
+Evidence supporting decision: [[PR#13](https://github.com/alvinzald/st1-assignment-3/pull/13)]
+
+If rejected, how the required feature was subsequently completed and verified: [Not applicable. The proposal was modified and accepted rather than rejected.]
+
+Saved proposal and targeted recovery details if needed: [[Saved proposal](evidence/copilot_plan_prompt.md). Recovery SHA is `299607323d5258b6c5a1c1af86cd94726abe7e16`]
+
+Human explanation of every changed method and limitations:
+- [`Appointment.reschedule()` validates the appointment status and new datetime before updating its time.]
+- [`AppointmentService.reschedule_appointment()` handles lookup, conflict checking and delegates the update to the domain method.]
+- [Rescheduling is only available for `SCHEDULED` appointments and uses the existing in-memory data store.]
+- [Changes remain visible only during the current session.]
+
+Another PG / willing UG / tutor reviewer, actual PR/diff review and feedback: [pending]
+
 Corrections, recheck and actual approval before integration: [links]
-Integrated PG SHA / common protected SHA: [response]
-Each assessed PG member's implementation, supervision and test contribution: [response and links]
+
+Integrated PG SHA / common protected SHA: [Protected Stage 9 SHA: `299607323d5258b6c5a1c1af86cd94726abe7e16`]
+
+Each assessed PG member's implementation, supervision and test contribution:
+- [Alvin Zaldivar - [defined requirements](https://github.com/alvinzald/st1-assignment-3/issues/12#issue-6257067352), [approved copilot plan](https://github.com/alvinzald/st1-assignment-3/issues/12#issuecomment-6704696945), supervised implementation, [reviewed code and tests](https://github.com/alvinzald/st1-assignment-3/pull/13#issue-6257535831), [verified results](https://github.com/alvinzald/st1-assignment-3/pull/13#issuecomment-6705299493)]
+
 Optional UG help, acknowledged separately: [response or none]
 
 ## I Four reflections
 
-1. Which agent change had the greatest blast radius? [response]
-2. Did the plan predict it? [response]
-3. What did you reject or manually correct? [response; report honestly if none]
-4. What evidence justified final approval? [response]
+1. Which agent change had the greatest blast radius? [I think the service-level rescheduling method carried the most risk. A mistake in the conflict-checking logic could allow overlapping appointments, affecting the reliability of the existing booking system.]
+2. Did the plan predict it? [Yes. Copilot's plan already considered scheduling conflicts and proposed reusing the existing conflict-checking method rather than introducing new logic.]
+3. What did you reject or manually correct? [I noticed that Copilot used the wrong parameter names in both rescheduling methods, so I requested corrections. I also asked it to include missing test cases for rescheduling inactive appointments to their existing time.]
+4. What evidence justified final approval? [After reviewing the corrections, I independently ran the tests and confirmed that all 50 passed, including the 13 new rescheduling cases. This supported my decision to accept the implementation after modification, although independent reviewer approval is still pending.]
 
 ## J Ten formative questions
 
-1. What is the difference between an AI assistant and an engineering agent? [response]
-2. What is the simplified agent loop used in Stage 10? [response]
-3. Why should an agent plan be reviewed before repository edits begin? [response]
-4. What is meant by the blast radius of a software change? [response]
-5. Why is diff review essential for agentic changes? [response]
-6. What is a human approval gate? [response]
-7. What is test accommodation and why is it dangerous? [response]
-8. What is rollback in the context of agentic software engineering? [response]
-9. Who remains accountable for accepted agentic changes? [response]
-10. What is the Stage 10 engineering rule? [response]
+1. What is the difference between an AI assistant and an engineering agent? [An AI assistant mainly helps by answering questions or suggesting solutions. An engineering agent goes further by carrying out development tasks, such as modifying files and running tests.]
+2. What is the simplified agent loop used in Stage 10? [The agent examines the task, prepares a plan, waits for approval, makes the approved changes and checks the results. The developer then reviews the work and decides whether to accept it.]
+3. Why should an agent plan be reviewed before repository edits begin? [Reviewing the plan first gives the developer a chance to catch unnecessary or risky changes before they affect the project.]
+4. What is meant by the blast radius of a software change? [It refers to how much of the system could be affected by a change, including parts that were not directly modified.]
+5. Why is diff review essential for agentic changes? [An agent's summary might not tell the whole story. Reviewing the diff lets us see exactly what changed and whether anything was modified without a good reason.]
+6. What is a human approval gate? [It is a point in the workflow where the agent must get permission from a developer before continuing with certain actions.]
+7. What is test accommodation and why is it dangerous? [This happens when tests are adjusted to agree with faulty code instead of correcting the code itself. The tests might pass, but the underlying problem would still exist.]
+8. What is rollback in the context of agentic software engineering? [Rollback means undoing changes made by the agent when they cause problems or fall outside the agreed scope, allowing the project to return to a known working state.]
+9. Who remains accountable for accepted agentic changes? [The developer and the team are still responsible for the submitted work. Using an agent does not transfer responsibility for mistakes to the AI.]
+10. What is the Stage 10 engineering rule? [The agent can help with the development work, but the developer must decide what it is allowed to do, check what it actually did and approve the outcome based on evidence.]
 
 ## K Completion and Stage 11 handover
 
-- [ ] Common Stage 9 checkpoint protected; UG pathway unaffected.
-- [ ] RES-01–06 and RES-05-R2 implemented in the same project.
-- [ ] Domain/service boundaries, current exceptions and coding standard preserved.
-- [ ] Positive/negative/boundary cases and failed-state checks verified.
-- [ ] Common tests remain valid and independently passing; full suite passes.
-- [ ] Plan reviewed before bounded actions; every file and test diff inspected.
-- [ ] Actual agent route, decisions, corrections and rechecks recorded honestly.
-- [ ] No unrelated features, persistence, dependencies or staff solutions introduced.
+- [x] Common Stage 9 checkpoint protected; UG pathway unaffected.
+- [x] RES-01–06 and RES-05-R2 implemented in the same project.
+- [x] Domain/service boundaries, current exceptions and coding standard preserved.
+- [x] Positive/negative/boundary cases and failed-state checks verified.
+- [x] Common tests remain valid and independently passing; full suite passes.
+- [x] Plan reviewed before bounded actions; every file and test diff inspected.
+- [x] Actual agent route, decisions, corrections and rechecks recorded honestly.
+- [x] No unrelated features, persistence, dependencies or staff solutions introduced.
 - [ ] Another-member or tutor review and integrated retest complete.
-- [ ] Tutorial, four reflections, ten formative responses and PG contributions complete.
-- [ ] Each PG member can explain their code and supervision.
-- [ ] README PG note, actual integrated SHA and limitations recorded.
+- [x] Tutorial, four reflections, ten formative responses and PG contributions complete.
+- [x] Each PG member can explain their code and supervision.
+- [X] README PG note, actual integrated SHA and limitations recorded.
 
 Unresolved issues / owner / action: [response]
 Stage 11 handover references to extension, tests, dependencies and actual AI/review evidence: [response]
