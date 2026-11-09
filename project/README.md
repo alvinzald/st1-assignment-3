@@ -20,4 +20,8 @@ The demo registers synthetic records and books/finds an appointment. All supplie
 Stage 6 and Stage 9 tasks are completed. The interactive menu allows user to register and find patients and practitioners, book and cancel appointments, find appointment history, and list appointments by practitioner and status.
 Queries filter and sort appointments without changing the original list. Cancelled appointments remain in history, and their time slots can be booked again.
 
+## Stages 10–11 – PG Features
+
+The PG extension adds appointment rescheduling and additional tests. Rescheduling allows an existing appointment to be moved to another available time while keeping its identity and participants. The tests check valid rescheduling, conflicts, invalid changes and appointment history.
+
 Service booking accepts IDs and a `datetime` (local, minute precision). Console parser accepts exactly `YYYY-MM-DD HH:MM`. Store lookups return None when absent; service lookups raise LookupError. Invalid values, duplicates, conflicts and illegal transitions raise ValueError. Lists are new containers holding the stored objects. No age, duration, patient-conflict or past-date rules apply.

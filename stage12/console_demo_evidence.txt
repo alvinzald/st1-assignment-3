@@ -1,0 +1,109 @@
+Enter your choice: 1
+Patient ID: P1
+Patient name: Test Patient
+Patient P1 registered.
+
+Enter your choice: 2
+Patient ID: P1
+P1: Test Patient
+
+Enter your choice: 3
+Practitioner ID: DR1
+Practitioner name: DR one
+Specialty: Genera
+Practitioner DR1 registered.
+
+Enter your choice: 3
+Practitioner ID: DR2
+Practitioner name: DR two
+Specialty: General
+Practitioner DR2 registered.
+
+Enter your choice: 4
+Practitioner ID: DR1
+DR1: DR one, Genera
+
+Enter your choice: 4
+Practitioner ID: DR2
+DR2: DR two, General
+
+Enter your choice: 2
+Patient ID: P99
+Error: Patient not found
+
+Enter your choice: 5
+Appointment ID: A1
+Patient ID: P1
+Practitioner ID: DR1
+Date/time (YYYY-MM-DD HH:MM): 2026-12-01 09:00
+Appointment booked.
+A1: P1 with DR1, 2026-12-01 09:00, scheduled
+
+Enter your choice: 5
+Appointment ID: A2
+Patient ID: P1
+Practitioner ID: DR1
+Date/time (YYYY-MM-DD HH:MM): 2026-12-01 09:00
+Error: Practitioner already has a SCHEDULED appointment at this time
+
+Enter your choice: 6
+Appointment ID: A1
+Appointment cancelled.
+A1: P1 with DR1, 2026-12-01 09:00, cancelled
+
+Enter your choice: 7
+Appointment ID: A1
+A1: P1 with DR1, 2026-12-01 09:00, cancelled
+
+Enter your choice: 6
+Appointment ID: A1
+Error: Only SCHEDULED appointments may be cancelled
+
+Enter your choice: 6
+Appointment ID: A99
+Error: Appointment not found
+
+6. Cancel appointment
+7. Find appointment
+8. List practitioner appointments
+0. Exit
+Enter your choice: 6
+Appointment ID: A1
+Error: Only SCHEDULED appointments may be cancelled
+
+
+Enter your choice: 6
+Appointment ID: A99
+Error: Appointment not found
+
+
+Enter your choice: 8
+Practitioner ID: DR1
+Status (scheduled/cancelled/completed or blank for all): 
+A1: P1 with DR1, 2026-12-01 09:00, cancelled
+
+
+Enter your choice: 8
+Practitioner ID: DR1
+Status (scheduled/cancelled/completed or blank for all): 
+A1: P1 with DR1, 2026-12-01 09:00, cancelled
+
+
+Enter your choice: 8
+Practitioner ID: DR1
+Status (scheduled/cancelled/completed or blank for all): cancelled
+A1: P1 with DR1, 2026-12-01 09:00, cancelled
+
+Enter your choice: 8
+Practitioner ID: DR2
+Status (scheduled/cancelled/completed or blank for all): 
+A3: P1 with DR2, 2026-12-01 09:00, scheduled
+
+Enter your choice: 8
+Practitioner ID: DR99
+Status (scheduled/cancelled/completed or blank for all): 
+Error: Practitioner not found
+
+Enter your choice: 0
+Goodbye!
+Session-only data: records are lost on exit.
